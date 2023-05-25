@@ -2,7 +2,6 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Chat from "./Chat/Chat"
 import Login from "./Login/Login";
 import Register from "./Register/Register"
-import userPFP from "./Pictures/user1-icon.jpg"
 import React, {useEffect, useState} from 'react';
 import {defaultUser} from "./Defaults";
 
