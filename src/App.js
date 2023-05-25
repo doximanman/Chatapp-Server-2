@@ -4,6 +4,7 @@ import Login from "./Login/Login";
 import Register from "./Register/Register"
 import userPFP from "./Pictures/user1-icon.jpg"
 import React, {useEffect, useState} from 'react';
+import {defaultUser} from "./Defaults";
 
 function App() {
 
@@ -18,14 +19,7 @@ function App() {
         }
     }, []);
 
-    // placeholder user
-    const tempUser={
-        username:"",
-        password:"123456",
-        displayName:"Bill",
-        profilePic:userPFP
-    }
-    const [user, setUser] = useState(tempUser)
+    const [user, setUser] = useState(defaultUser)
 
 
     return (
