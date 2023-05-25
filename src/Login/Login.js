@@ -5,6 +5,7 @@ import Title from '../FormsItems/Title';
 import BottomMessage from '../FormsItems/BottomMessage';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
+import {DoesUserExist, GetUser, ValidateUser} from "../ServerQuery/UserQuery";
 
 function Login({setUser}) {
     setUser(null)
@@ -32,24 +33,16 @@ function Login({setUser}) {
 
     }
 
-    const isUserExist = (username, password) => {
-        let users = JSON.parse(sessionStorage.getItem('users'));
-        for (let i = 0; i < users.length; i++) {
-            if (users[i]['username'] === username && users[i]['password'] === password) {
-                return i;
-            }
-        }
-        return -1;
-    }
+    let JWT=null;
 
     const navigate = useNavigate();
-    const handleLogin = e => {
+    async function handleLogin(e){
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
-        const isUserExistCode = isUserExist(username, password);
-        if (isUserExistCode  >= 0) {
-            const user=JSON.parse(sessionStorage.getItem('users'))[isUserExistCode];
+        JWT=await ValidateUser(username,password)
+        if (JWT) {
+            const user=await GetUser(username,JWT);
             setUser(user)
             navigate("/Chat");
         }
