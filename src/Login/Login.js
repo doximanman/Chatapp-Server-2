@@ -5,7 +5,7 @@ import Title from '../FormsItems/Title';
 import BottomMessage from '../FormsItems/BottomMessage';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
-import {UserExists, GetUser, ValidateUser} from "../ServerQuery/UserQuery";
+import { GetUser, ValidateUser} from "../ServerQuery/UserQuery";
 
 function Login({setUser}) {
     setUser(null)
