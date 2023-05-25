@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 
 
-function Register() {
+function Register({setUser}) {
     const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     const usernameRegExp = /^[a-zA-Z0-9-_!.]{4,20}$/;
 
@@ -107,7 +107,7 @@ function Register() {
         const password = input.Password;
         const repeatPassword = input.RepeatPassword;
         const displayName = input.DisplayName;
-        const picture = input.Picture;
+        const profilePic = input.Picture;
         let error = 0;
         if (!username || !usernameRegExp.test(username)) {
             setError(prev => ({
@@ -137,10 +137,10 @@ function Register() {
             }));
             error = 1;
         }
-        if (!picture) {
+        if (!profilePic) {
             setError(prev => ({
                 ...prev,
-                Picture: "Please choose a picture."
+                Picture: "Please choose a profilePic."
             }));
             error = 1;
         }
@@ -154,7 +154,7 @@ function Register() {
             }));
         }
         else {
-            const userData = { username, password, displayName, picture };
+            const userData = { username, password, displayName, profilePic };
             const storedUsers = sessionStorage.getItem('users');
             let users = [];
             if (storedUsers) {
@@ -162,7 +162,7 @@ function Register() {
             }
             users.push(userData);
             sessionStorage.setItem('users', JSON.stringify(users));
-            navigate("/Login");
+            navigate("/Login",{state:{setUser}});
         }
     }
 

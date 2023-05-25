@@ -1,13 +1,13 @@
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Chat from "./Chat/Chat"
 import Login from "./Login/Login";
 import Register from "./Register/Register"
-import React, { useEffect, useState } from 'react';
+import userPFP from "./Pictures/user1-icon.jpg"
+import React, {useEffect, useState} from 'react';
 
 function App() {
 
-    useEffect(() => { 
+    useEffect(() => {
         const storedUsers = sessionStorage.getItem('users');
         if (!storedUsers) {
             sessionStorage.setItem('users', JSON.stringify([]));
@@ -16,50 +16,25 @@ function App() {
         if (!currentUser) {
             sessionStorage.setItem('currentUser', JSON.stringify([]));
         }
-        }, []);
-        
-       
-        
-    // useEffect(() => {
-    //     const clearLocalStorage = () => {
-    //         localStorage.clear();
-    //     };
+    }, []);
 
-    //     window.addEventListener('beforeunload', clearLocalStorage);
-
-    //     return () => {
-    //         window.removeEventListener('beforeunload', clearLocalStorage);
-    //     };
-    // }, []);
-    // const [isExiting, setIsExiting] = useState(false);
-
-    // useEffect(() => {
-    //     const handleBeforeUnload = () => {
-    //         if (isExiting) {
-    //             localStorage.clear();
-    //         }
-    //     };
-
-    //     const handleExit = () => {
-    //         setIsExiting(true);
-    //     };
-    //     window.addEventListener('beforeunload', handleBeforeUnload);
-    //     window.addEventListener('unload', handleExit);
-
-    //     return () => {
-    //         window.removeEventListener('beforeunload', handleBeforeUnload);
-    //         window.removeEventListener('unload', handleExit);
-    //     };
-    // }, [isExiting]);
+    // placeholder user
+    const tempUser={
+        username:"",
+        password:"123456",
+        displayName:"Bill",
+        profilePic:userPFP
+    }
+    const [user, setUser] = useState(tempUser)
 
 
     return (
         <BrowserRouter>
             <Routes onL>
-                <Route path="/" element={<Login />}></Route>
-                <Route path="/Login" element={<Login />}></Route>
-                <Route path="/Chat" element={<Chat />}></Route>
-                <Route path="/Register" element={<Register />}></Route>
+                <Route path="/" element={<Login setUser={setUser}/>}></Route>
+                <Route path="/Login" element={<Login setUser={setUser}/>}></Route>
+                <Route path="/Chat" element={<Chat user={user} setUser={setUser}/>}></Route>
+                <Route path="/Register" element={<Register setUser={setUser}/>}></Route>
             </Routes>
         </BrowserRouter>
     );

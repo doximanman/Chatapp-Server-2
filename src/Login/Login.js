@@ -2,12 +2,12 @@ import "./Login.css"
 import Input from '../FormsItems/Input';
 import Button from '../FormsItems/Button';
 import Title from '../FormsItems/Title';
-import Background from '../FormsItems/Background';
 import BottomMessage from '../FormsItems/BottomMessage';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 
-function Login() {
+function Login({setUser}) {
+    setUser(null)
     const [input, setInput] = useState({
         Username: '',
         Password: ''
@@ -38,14 +38,8 @@ function Login() {
             if (users[i]['username'] === username && users[i]['password'] === password) {
                 return i;
             }
-            else if (users[i]['username'] === username) {
-                return -1;
-            }
-            else if (users[i]['password'] === password) {
-                return -2;
-            }
         }
-        return -3;
+        return -1;
     }
 
     const navigate = useNavigate();
@@ -55,25 +49,14 @@ function Login() {
         const password = input.Password;
         const isUserExistCode = isUserExist(username, password);
         if (isUserExistCode  >= 0) {
-            sessionStorage.setItem('currentUser', JSON.stringify(JSON.parse(sessionStorage.getItem('users'))[isUserExistCode]) );
+            const user=JSON.parse(sessionStorage.getItem('users'))[isUserExistCode];
+            setUser(user)
             navigate("/Chat");
-        }
-        else if (isUserExistCode === -1) {
-            setError(prev => ({
-                ...prev,
-                Password: "Password is wrong, please try again."
-            }));
-        }
-        else if (isUserExistCode === -2) {
-            setError(prev => ({
-                ...prev,
-                Username: "Username is wrong, please try again."
-            }));
         }
         else {
             setError(prev => ({
                 ...prev,
-                Username: "Username doesn't exist, please register first."
+                Username: "User doesn't exist, please register first."
             }));
         }
     }
