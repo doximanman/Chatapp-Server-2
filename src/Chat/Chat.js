@@ -19,11 +19,13 @@ function Chat({user}) {
     })[0]);
 
     useEffect(()=>{
-        if(user.username===""){
-            navigate("/")
+        if(!user){
+            navigate("/Login")
         }
     },[user,navigate])
-
+    if(!user){
+        return null;
+    }
     return (
         <>
             <div id="main">

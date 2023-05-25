@@ -212,12 +212,12 @@ body {
 }
 
 #message-input {
-    width: calc(100% - 71px);
+    width: calc(100% - 65px);
     outline: none;
     border-radius: 0;
     border-width: 0;
     height: 30px;
-    border-bottom:1px solid black;
+    border-bottom:0;
 }
 
 #send-icon {
@@ -320,13 +320,12 @@ body {
 }
 
 #send-btn {
-    width: 68.67px;
+    width: 69px;
     height: 30px;
     position:absolute;
     left:calc(100% - 69px);
     text-align: center;
     border-radius: 0;
-    border-bottom:1px solid black;
 }
 
 .button-8 {

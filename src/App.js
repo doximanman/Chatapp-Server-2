@@ -3,7 +3,6 @@ import Chat from "./Chat/Chat"
 import Login from "./Login/Login";
 import Register from "./Register/Register"
 import React, {useEffect, useState} from 'react';
-import {defaultUser} from "./Defaults";
 
 function App() {
 
@@ -18,7 +17,7 @@ function App() {
         }
     }, []);
 
-    const [user, setUser] = useState(defaultUser)
+    const [user, setUser] = useState(null)
 
 
     return (

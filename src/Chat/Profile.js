@@ -3,7 +3,7 @@ import userPFP from "../Pictures/user1-icon.jpg"
 import { useRef } from "react";
 import {useNavigate} from "react-router-dom";
 
-function Profile({ user, setContacts }) {
+function Profile({ user, setContacts,setUser }) {
 
     const contactInput = useRef(null);
 
@@ -28,6 +28,7 @@ function Profile({ user, setContacts }) {
             }
             setContacts(contacts => [...contacts, contact]);
             contactInput.current.value = '';
+            updateDismiss();
         }
     }
 
@@ -41,7 +42,7 @@ function Profile({ user, setContacts }) {
     return (
         <div id="profile">
             <img className="profile-pic" src={user.profilePic} alt="Profile" />
-            <div id="user-displayName" className="displayName">{user.displayName}</div>
+            <div id="user-name" className="profile-name">{user.displayName}</div>
             <img id="add-chat" data-bs-toggle="modal" data-bs-target="#addChat" src={add}
                 alt="New Chat" />
             <button type="button" onClick={handleLogout} className="btn btn-danger btn-sm" id="logout">Logout</button>
@@ -54,7 +55,7 @@ function Profile({ user, setContacts }) {
                                 aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <input ref={contactInput} onKeyUp={updateDismiss} id="displayNameInput" type="text" className="col-12" placeholder="Contact Name" />
+                            <input ref={contactInput} onKeyUp={updateDismiss} id="nameInput" type="text" className="col-12" placeholder="Contact Name" />
                         </div>
                         <div className="modal-footer">
                             <button onClick={newContact} id="addchatBTN" type="button" className="btn btn-primary">Add</button>
