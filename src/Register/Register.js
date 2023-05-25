@@ -5,9 +5,10 @@ import Title from '../FormsItems/Title';
 import BottomMessage from '../FormsItems/BottomMessage';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
+import {AddUser, UserExists} from "../ServerQuery/UserQuery";
 
 
-function Register({setUser}) {
+function Register() {
     const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     const usernameRegExp = /^[a-zA-Z0-9-_!.]{4,20}$/;
 
@@ -56,16 +57,6 @@ function Register({setUser}) {
 
     }
 
-    const isUserExist = (username, password) => {
-        let users = JSON.parse(sessionStorage.getItem('users'));
-        for (let i = 0; i < users.length; i++) {
-            if (users[i]['username'] === username && users[i]['password'] === password) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     const validateInput = e => {
         let { name, value } = e.target;
         setError(prev => {
@@ -101,7 +92,7 @@ function Register({setUser}) {
     }
 
     const navigate = useNavigate();
-    const handleRegister = e => {
+    async function handleRegister(e){
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
@@ -147,22 +138,16 @@ function Register({setUser}) {
         if (error) {
             return;
         }
-        if (isUserExist(username, password)) {
+        if (await UserExists(username, password)) {
             setError(prev => ({
                 ...prev,
-                Username: "Username and password already exist, please try again."
+                Username: "User already exists, please try again."
             }));
         }
         else {
             const userData = { username, password, displayName, profilePic };
-            const storedUsers = sessionStorage.getItem('users');
-            let users = [];
-            if (storedUsers) {
-                users = JSON.parse(storedUsers);
-            }
-            users.push(userData);
-            sessionStorage.setItem('users', JSON.stringify(users));
-            navigate("/Login",{state:{setUser}});
+            await AddUser(userData)
+            navigate("/Login");
         }
     }
 

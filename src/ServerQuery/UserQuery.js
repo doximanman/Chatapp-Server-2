@@ -14,7 +14,7 @@ export async function ValidateUser(username,password){
     return await res.text();
 }
 
-export async function DoesUserExist(username,password){
+export async function UserExists(username, password){
     return (await ValidateUser(username,password))!==null
 }
 
@@ -30,4 +30,15 @@ export async function GetUser(username,JWT){
         return null;
     }
     return await res.json();
+}
+
+export async function AddUser(user){
+    const res=await fetch(serverAddress+"/Users",{
+        'method':'post',
+        'headers':{
+            'Content-Type':'application/json'
+        },
+        'body':JSON.stringify(user)
+    })
+    return res.ok
 }

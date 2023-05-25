@@ -26,7 +26,7 @@ function App() {
                 <Route path="/" element={<Login setUser={setUser}/>}></Route>
                 <Route path="/Login" element={<Login setUser={setUser}/>}></Route>
                 <Route path="/Chat" element={<Chat user={user} setUser={setUser}/>}></Route>
-                <Route path="/Register" element={<Register setUser={setUser}/>}></Route>
+                <Route path="/Register" element={<Register/>}></Route>
             </Routes>
         </BrowserRouter>
     );
