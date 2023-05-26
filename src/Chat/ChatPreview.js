@@ -1,33 +1,34 @@
-function ChatPreview({contact, messages, changeSelection}) {
+function convertFormat(dateTime) {
+    let date = dateTime.split("T")[0]
+    let time = (dateTime.split("T")[1]).split(".")[0]
+    return date + " " + time
+}
 
-    const className = "chat-preview " + contact.classes;
+function ChatPreview({chat, changeSelection}) {
 
-    if (contact.classes.includes('selected-preview')) {
-        const lastMessage = messages.length > 0 ? messages[0] : {date: '', message: ''};
-        return (
-            <div onClick={() => changeSelection(contact)} className={className}>
-                <img className="profile-pic" src={contact.profilePic} alt="Profile"/>
-                <div className="profile-name">{contact.displayName}</div>
-                <div className="preview-date">{lastMessage.date}</div>
-                <div>
-                    <p className="last-message">{lastMessage.message}</p>
-                </div>
+    const className = "chat-preview " + chat.classes;
 
+    const lastMSG = chat.lastMessage
+    const lastMessage = lastMSG ? {
+        data: convertFormat(lastMSG.created),
+        message: lastMSG.content
+    } : {
+        date: '',
+        message: ''
+    };
+
+
+    return (
+        <div onClick={() => changeSelection(chat)} className={className}>
+            <img className="profile-pic" src={chat.user.profilePic} alt="Profile"/>
+            <div className="profile-name">{chat.user.displayName}</div>
+            <div className="preview-date">{lastMessage.date}</div>
+            <div>
+                <p className="last-message">{lastMessage.message}</p>
             </div>
-        );
-    } else {
-        const lastMessage = contact.messages.length > 0 ? contact.messages[0] : {date: '', message: ''};
-        return (
-            <div onClick={() => changeSelection(contact)} className={className}>
-                <img className="profile-pic" src={contact.profilePic} alt="Profile"/>
-                <div className="profile-name">{contact.displayName}</div>
-                <div className="preview-date">{lastMessage.date}</div>
-                <div>
-                    <p className="last-message">{lastMessage.message}</p>
-                </div>
-            </div>
-        );
-    }
+        </div>
+    );
+
 }
 
 export default ChatPreview;

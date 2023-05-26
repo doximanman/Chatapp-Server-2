@@ -2,20 +2,9 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Chat from "./Chat/Chat"
 import Login from "./Login/Login";
 import Register from "./Register/Register"
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 function App() {
-
-    useEffect(() => {
-        const storedUsers = sessionStorage.getItem('users');
-        if (!storedUsers) {
-            sessionStorage.setItem('users', JSON.stringify([]));
-        }
-        const currentUser = sessionStorage.getItem('currentUser');
-        if (!currentUser) {
-            sessionStorage.setItem('currentUser', JSON.stringify([]));
-        }
-    }, []);
 
     const [user, setUser] = useState(null)
 

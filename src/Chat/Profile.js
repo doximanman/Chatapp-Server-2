@@ -1,9 +1,9 @@
 import add from "../Pictures/add.png";
-import userPFP from "../Pictures/user1-icon.jpg"
 import { useRef } from "react";
 import {useNavigate} from "react-router-dom";
+import {AddChat} from "../ServerQuery/ChatQuery";
 
-function Profile({ user, setContacts,setUser }) {
+function Profile({ user, setChats,JWT }) {
 
     const contactInput = useRef(null);
 
@@ -16,17 +16,15 @@ function Profile({ user, setContacts,setUser }) {
         }
     }
 
-    function newContact() {
+    async function newChat() {
         if (/\S/.test(contactInput.current.value)) {
-            let contact = {
-                profilePic: userPFP,
-                displayName: contactInput.current.value,
-                lastDate: "25/4/2023, 11:01:54 PM",
-                lastMessage: "WORLD",
-                classes: "",
-                messages: []
+            let chat=await AddChat(contactInput.current.value,JWT)
+            if(!chat){
+                alert("Chat name not found!")
+                return
             }
-            setContacts(contacts => [...contacts, contact]);
+            chat.classes=""
+            setChats(chats => [...chats, chat]);
             contactInput.current.value = '';
             updateDismiss();
         }
@@ -58,7 +56,7 @@ function Profile({ user, setContacts,setUser }) {
                             <input ref={contactInput} onKeyUp={updateDismiss} id="nameInput" type="text" className="col-12" placeholder="Contact Name" />
                         </div>
                         <div className="modal-footer">
-                            <button onClick={newContact} id="addchatBTN" type="button" className="btn btn-primary">Add</button>
+                            <button onClick={newChat} id="addchatBTN" type="button" className="btn btn-primary">Add</button>
                         </div>
                     </div>
                 </div>

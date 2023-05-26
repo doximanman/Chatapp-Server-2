@@ -1,7 +1,7 @@
 import "./Chat.css"
 import Profile from "./Profile";
 import ChatTitle from "./ChatTitle";
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect} from "react";
 import MessageList from "./MessageList";
 import ChatList from "./ChatList";
 import MessageSender from "./MessageSender";
@@ -15,53 +15,59 @@ function Chat({user}) {
 
     const [JWT, setJWT] = useState(null);
 
-    const [contacts, setContacts] = useState([]);
+    const [chats, setChats] = useState(null);
 
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedChat, setSelectedChat] = useState(null);
 
     useEffect(() => {
         if (!user) {
             navigate("/Login")
+            return;
         }
         // sets up initial state
         const getJWT = async () => {
             setJWT(await ValidateUser(user.username, user.password))
         }
-        getJWT()
+        if (!JWT) {
+            getJWT()
+            return;
+        }
+        const initializeChats = async () => {
+            let chats = await GetChats(JWT)
+            if (!chats || chats.length === 0) {
+                return
+            }
+            chats.forEach(chat => {
+                chat.classes = ""
+            })
+            if (chats.length > 0) {
+                chats[0].classes = "selected-preview"
+            }
+            setChats(chats)
+            setSelectedChat(chats.filter((chat) => {
+                return chat.classes.includes("selected-preview");
+            })[0])
+        }
+        if (!chats)
+            initializeChats();
     })
 
     useEffect(() => {
-        const initializeContacts = async () => {
-            let contacts = await GetChats(JWT)
-            if(!contacts || contacts.length===0){
-                return
-            }
-            contacts.forEach(contact => {
-                contact["selected"] = "no"
-            })
-            if (contacts.length > 0) {
-                contacts[0].selected = "yes"
-            }
-            setContacts(contacts)
-            setSelectedUser(contacts.filter((contact) => {
-                return contact.selected === "yes";
-            })[0])
-        }
-        initializeContacts();
+
     }, [JWT])
 
-    if (!user || !JWT) {
+    if (!user || !JWT || !chats || !selectedChat) {
         return (<>Loading...</>);
     }
     return (
         <>
             <div id="main">
-                <Profile user={user} setContacts={setContacts}/>
-                <ChatList chats={contacts} user={selectedUser} setSelectedUser={setSelectedUser}/>
+                <Profile user={user} setChats={setChats} JWT={JWT}/>
+                <ChatList chats={chats} setSelectedChat={setSelectedChat}/>
                 <div id="chat">
-                    <ChatTitle user={selectedUser}/>
-                    <MessageList user={selectedUser}/>
-                    <MessageSender contact={selectedUser} setSelectedUser={setSelectedUser}/>
+                    <ChatTitle chat={selectedChat}/>
+                    <MessageList chat={selectedChat}/>
+                    <MessageSender chat={selectedChat} setSelectedChat={setSelectedChat}/>
                 </div>
             </div>
         </>

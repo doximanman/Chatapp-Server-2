@@ -11,6 +11,7 @@ export async function ValidateUser(username,password){
             'body': JSON.stringify(data)
         })
     }catch (e) {
+        alert(e)
         return null;
     }
     if(!res.ok){
@@ -34,6 +35,7 @@ export async function GetUser(username,JWT){
             }
         })
     }catch (e) {
+        alert(e)
         return null;
     }
     if(!res.ok){
@@ -53,6 +55,7 @@ export async function AddUser(user){
             'body': JSON.stringify(user)
         })
     }catch (e) {
+        alert(e)
         return null;
     }
     return res.ok

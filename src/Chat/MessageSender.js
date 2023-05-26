@@ -7,13 +7,7 @@ function MessageSender({contact,setSelectedUser}){
     const userInput = useRef(null);
 
     if(!contact){
-        return(<div id="message-send">
-            <input type="text" id="message-input" placeholder="Type your message..."/>
-            <button id="send-btn" type="submit"
-                    className="button-8">
-                <img id="send-icon" src={sendIcon} height="28" width="40" alt="send"/>
-            </button>
-        </div>)
+        return(<div id="message-send"></div>)
     }
 
 

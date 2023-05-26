@@ -6,27 +6,27 @@ export function setSelected({bool}) {
     selected = bool;
 }
 
-function ChatList({chats, user, setSelectedUser}) {
 
-    if (!user) {
-        return (<div id="chat-list"></div>)
-    }
 
-    function changeSelection(contact) {
+function ChatList({chats, setSelectedChat}) {
+
+
+
+    function changeSelection(chat) {
         let allow = false;
         if (window.innerWidth <= 632 && !selected) {
             document.getElementById('chat').classList.add('fullscreen');
             document.getElementById('chat-list').classList.add('hidden');
             allow = true;
         }
-        if (allow || !contact.classes.includes('selected-preview')) {
-            const selectedUser = chats.filter((contact) => {
-                return contact.classes.includes("selected-preview");
+        if (allow || !chat.classes.includes("selected-preview")) {
+            const selectedChat = chats.filter((chat) => {
+                return chat.classes.includes("selected-preview");
             })[0];
-            selectedUser.classes = selectedUser.classes.replace("selected-preview", "");
-            contact.classes += " selected-preview";
+            selectedChat.classes.replace("selected-preview", " ");
+            chat.classes.concat(" selected-preview");
             selected = true;
-            setSelectedUser({...contact});
+            setSelectedChat({...chat});
         }
     }
 
@@ -44,8 +44,8 @@ function ChatList({chats, user, setSelectedUser}) {
         }
     })
 
-    const chatList = chats.map((contact, key) => {
-        return <ChatPreview contact={contact} changeSelection={changeSelection} messages={user.messages} key={key}/>
+    const chatList = chats.map((chat, key) => {
+        return <ChatPreview chat={chat} changeSelection={changeSelection} key={key}/>
     });
 
     return (
