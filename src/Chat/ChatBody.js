@@ -1,14 +1,14 @@
 import MessageList from "./MessageList";
 import MessageSender from "./MessageSender";
 import {useEffect, useState} from "react";
-import {GetMessages} from "../ServerQuery/ChatQuery";
+import {GetChats, GetMessages} from "../ServerQuery/ChatQuery";
 
-function ChatBody({user,chat,JWT}){
+function ChatBody({user,chat,JWT,setChats}){
 
     const [messages,setMessages]=useState(null)
 
     useEffect(()=>{
-        if(messages)
+        if(messages||!chat)
             return
 
         const getMessages=async()=>{
@@ -17,15 +17,28 @@ function ChatBody({user,chat,JWT}){
         getMessages()
     })
 
-    if(!messages){
-        return <>Loading...</>
-    }
+    useEffect(()=>{
+        if(!chat)
+            return
+
+        const getChats=async()=>{
+            const chats=await GetChats(JWT)
+            chats.forEach(currentChat=>{
+                if(currentChat.id===chat.id)
+                    currentChat.classes="selected-preview"
+                else{
+                    currentChat.classes=""
+                }
+            })
+            setChats(chats)
+        }
+        getChats()
+    },[JWT,chat,setChats,messages])
 
     return(
         <>
-            <MessageList user={user} messages={messages}/>
-
-            <MessageSender chat={chat} JWT={JWT}/>
+            <MessageList user={user} messages={messages} JWT={JWT}/>
+            <MessageSender chat={chat} JWT={JWT} setMessages={setMessages}/>
         </>
     )
 }

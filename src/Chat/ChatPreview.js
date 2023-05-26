@@ -10,7 +10,7 @@ function ChatPreview({chat, changeSelection}) {
 
     const lastMSG = chat.lastMessage
     const lastMessage = lastMSG ? {
-        data: convertFormat(lastMSG.created),
+        date: convertFormat(lastMSG.created),
         message: lastMSG.content
     } : {
         date: '',

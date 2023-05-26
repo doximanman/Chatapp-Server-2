@@ -22,11 +22,13 @@ function ChatList({chats, setChats}) {
         if (allow || !chat.classes.includes("selected-preview")) {
             const selectedChat = chats.filter((chat) => {
                 return chat.classes.includes("selected-preview");
-            })[0];
-            selectedChat.classes.replace("selected-preview", " ");
-            chat.classes.concat(" selected-preview");
+            });
+            if(selectedChat.length>0){
+                selectedChat[0].classes.replace("selected-preview", " ");
+            }
+            chat.classes+=" selected-preview";
             selected = true;
-            setChats({...chats});
+            setChats([...chats]);
         }
     }
 

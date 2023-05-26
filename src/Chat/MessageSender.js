@@ -2,28 +2,29 @@ import sendIcon from "../Pictures/send-icon.png";
 import {useRef} from "react";
 import {SendMessage} from "../ServerQuery/ChatQuery";
 
-function MessageSender({chat,setMessages}){
+function MessageSender({chat,JWT,setMessages}){
 
     const userInput = useRef(null);
 
     if(!chat){
-        return(<div id="message-send"></div>)
+        return <></>
     }
-
-
 
     const newMessage = async ()=> {
         const input = userInput.current.value;
         if (/\S/.test(input)) {
-            await SendMessage(input,chat.id,JWT)
-            setJWT({...JWT});
+            const message=await SendMessage(input,chat.id,JWT)
+            if(message===null){
+                return
+            }
+            setMessages(messages=>[message,...messages]);
         }
         document.getElementById('message-input').value = '';
     }
 
     const enterKey = async (e)=> {
         if (e.key === "Enter")
-            newMessage();
+            await newMessage();
     }
 
 
