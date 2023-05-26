@@ -29,7 +29,6 @@ function Profile({ user, setChats,JWT }) {
             updateDismiss();
         }
     }
-
     const navigate=useNavigate();
 
     const handleLogout = () => {
