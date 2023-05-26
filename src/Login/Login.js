@@ -43,6 +43,7 @@ function Login({setUser}) {
         JWT=await ValidateUser(username,password)
         if (JWT) {
             const user=await GetUser(username,JWT);
+            user["password"]=password
             setUser(user)
             navigate("/Chat");
         }

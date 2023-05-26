@@ -6,6 +6,10 @@ import {setSelected} from "./ChatList";
 
 function ChatTitle({user}){
 
+    if(!user){
+        return (<div id="chat-title"></div>)
+    }
+
     function goBack(){
         document.getElementById('chat').classList.remove('fullscreen');
         document.getElementById('chat-list').classList.remove('hidden');

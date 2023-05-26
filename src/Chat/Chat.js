@@ -1,40 +1,67 @@
 import "./Chat.css"
 import Profile from "./Profile";
 import ChatTitle from "./ChatTitle";
-import { useState, useEffect } from "react";
+import {useState, useEffect, useRef} from "react";
 import MessageList from "./MessageList";
 import ChatList from "./ChatList";
-import contacts from "./Contacts"
 import MessageSender from "./MessageSender";
 import {useNavigate} from "react-router-dom";
+import {ValidateUser} from "../ServerQuery/UserQuery";
+import {GetChats} from "../ServerQuery/ChatQuery";
 
 function Chat({user}) {
 
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
-    const [chats, setContacts] = useState(contacts);
+    const [JWT, setJWT] = useState(null);
 
-    const [selectedUser, setSelectedUser] = useState(chats.filter((contact) => {
-        return contact.classes.includes("selected-preview");
-    })[0]);
+    const [contacts, setContacts] = useState([]);
 
-    useEffect(()=>{
-        if(!user){
+    const [selectedUser, setSelectedUser] = useState(null);
+
+    useEffect(() => {
+        if (!user) {
             navigate("/Login")
         }
-    },[user,navigate])
-    if(!user){
-        return null;
+        // sets up initial state
+        const getJWT = async () => {
+            setJWT(await ValidateUser(user.username, user.password))
+        }
+        getJWT()
+    })
+
+    useEffect(() => {
+        const initializeContacts = async () => {
+            let contacts = await GetChats(JWT)
+            if(!contacts || contacts.length===0){
+                return
+            }
+            contacts.forEach(contact => {
+                contact["selected"] = "no"
+            })
+            if (contacts.length > 0) {
+                contacts[0].selected = "yes"
+            }
+            setContacts(contacts)
+            setSelectedUser(contacts.filter((contact) => {
+                return contact.selected === "yes";
+            })[0])
+        }
+        initializeContacts();
+    }, [JWT])
+
+    if (!user || !JWT) {
+        return (<>Loading...</>);
     }
     return (
         <>
             <div id="main">
                 <Profile user={user} setContacts={setContacts}/>
-                <ChatList chats={chats} user={selectedUser} setSelectedUser={setSelectedUser} />
+                <ChatList chats={contacts} user={selectedUser} setSelectedUser={setSelectedUser}/>
                 <div id="chat">
-                    <ChatTitle user={selectedUser} />
-                    <MessageList user={selectedUser} />
-                    <MessageSender contact={selectedUser} setSelectedUser={setSelectedUser} />
+                    <ChatTitle user={selectedUser}/>
+                    <MessageList user={selectedUser}/>
+                    <MessageSender contact={selectedUser} setSelectedUser={setSelectedUser}/>
                 </div>
             </div>
         </>
