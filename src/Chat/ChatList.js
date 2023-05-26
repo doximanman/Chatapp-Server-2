@@ -8,7 +8,7 @@ export function setSelected({bool}) {
 
 
 
-function ChatList({chats, setSelectedChat}) {
+function ChatList({chats, setChats}) {
 
 
 
@@ -26,7 +26,7 @@ function ChatList({chats, setSelectedChat}) {
             selectedChat.classes.replace("selected-preview", " ");
             chat.classes.concat(" selected-preview");
             selected = true;
-            setSelectedChat({...chat});
+            setChats({...chats});
         }
     }
 

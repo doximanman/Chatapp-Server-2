@@ -4,9 +4,9 @@ import {setSelected} from "./ChatList";
 
 
 
-function ChatTitle({user}){
+function ChatTitle({chat}){
 
-    if(!user){
+    if(!chat){
         return (<div id="chat-title"></div>)
     }
 
@@ -20,8 +20,8 @@ function ChatTitle({user}){
 
     return(
         <div id="chat-title">
-            <img className="profile-pic" src={user.profilePic} alt="Profile"/>
-            <div id="chat-name" className="profile-name">{user.displayName}</div>
+            <img className="profile-pic" src={chat.user.profilePic} alt="Profile"/>
+            <div id="chat-name" className="profile-name">{chat.user.displayName}</div>
             <img id="side-logo" src={logo} alt="Chatapp"></img>
             <button id="go-back" onClick={goBack} type="button"></button>
         </div>

@@ -62,3 +62,46 @@ export async function GetChat(id,JWT){
     }
     return await res.json()
 }
+
+export async function GetMessages(id,JWT){
+    let res
+    try{
+        res = await fetch(serverAddress + "/Chats/" + id+"/Messages", {
+            'method': 'get',
+            'headers': {
+                'authorization': 'bearer ' + JWT,
+                'Accept': 'application/json',
+            },
+        })
+    }catch(e){
+        alert(e)
+        return null
+    }
+    if(!res.ok){
+        return null;
+    }
+    return await res.json();
+}
+
+export async function SendMessage(msg,id,JWT){
+    const data={msg}
+    let res
+    try{
+        res = await fetch(serverAddress + "/Chats/" + id+"/Messages", {
+            'method': 'post',
+            'headers': {
+                'authorization': 'bearer ' + JWT,
+                'Content-Type':'application/json',
+                'Accept': 'application/json',
+            },
+            'body':JSON.stringify(data)
+        })
+    }catch(e){
+        alert(e)
+        return null
+    }
+    if(!res.ok){
+        return null
+    }
+    return await res.json()
+}

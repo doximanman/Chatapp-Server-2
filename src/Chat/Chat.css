@@ -189,7 +189,7 @@ body {
     }
 }
 
-#chat-body {
+#message-list {
     padding-top:10px;
     width:100%;
     height: calc(100% - var(--listHeight) - 30px);

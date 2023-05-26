@@ -8,6 +8,7 @@ import MessageSender from "./MessageSender";
 import {useNavigate} from "react-router-dom";
 import {ValidateUser} from "../ServerQuery/UserQuery";
 import {GetChats} from "../ServerQuery/ChatQuery";
+import ChatBody from "./ChatBody";
 
 function Chat({user}) {
 
@@ -16,8 +17,6 @@ function Chat({user}) {
     const [JWT, setJWT] = useState(null);
 
     const [chats, setChats] = useState(null);
-
-    const [selectedChat, setSelectedChat] = useState(null);
 
     useEffect(() => {
         if (!user) {
@@ -44,30 +43,27 @@ function Chat({user}) {
                 chats[0].classes = "selected-preview"
             }
             setChats(chats)
-            setSelectedChat(chats.filter((chat) => {
-                return chat.classes.includes("selected-preview");
-            })[0])
         }
         if (!chats)
             initializeChats();
     })
 
-    useEffect(() => {
-
-    }, [JWT])
-
-    if (!user || !JWT || !chats || !selectedChat) {
+    if (!user || !JWT || !chats ) {
         return (<>Loading...</>);
     }
+
+    const selectedChat=chats.filter((chat) => {
+        return chat.classes.includes("selected-preview");
+    })[0]
+
     return (
         <>
             <div id="main">
                 <Profile user={user} setChats={setChats} JWT={JWT}/>
-                <ChatList chats={chats} setSelectedChat={setSelectedChat}/>
+                <ChatList chats={chats} setChats={setChats}/>
                 <div id="chat">
                     <ChatTitle chat={selectedChat}/>
-                    <MessageList chat={selectedChat}/>
-                    <MessageSender chat={selectedChat} setSelectedChat={setSelectedChat}/>
+                    <ChatBody user={user} chat={selectedChat} JWT={JWT}/>
                 </div>
             </div>
         </>
