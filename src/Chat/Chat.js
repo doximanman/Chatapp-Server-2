@@ -19,9 +19,10 @@ function Chat({user}) {
     const[selectedChat,setSelectedChat]=useState(null)
 
 
+
     useEffect(()=>{
         if(chats)
-            setSelectedChat(chats.filter(chat=>{
+            setSelectedChat(chats.filter(chat => {
                 return chat.classes.includes("selected-preview")
             })[0])
     },[chats])
@@ -59,7 +60,7 @@ function Chat({user}) {
     return (
         <>
             <div id="main">
-                <Profile user={user} setChats={setChats} JWT={JWT}/>
+                <Profile user={user} chats={chats} setChats={setChats} JWT={JWT}/>
                 <ChatList chats={chats} setChats={setChats}/>
                 <div id="chat">
                     <ChatTitle chat={selectedChat}/>

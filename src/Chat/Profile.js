@@ -3,7 +3,7 @@ import { useRef } from "react";
 import {useNavigate} from "react-router-dom";
 import {AddChat} from "../ServerQuery/ChatQuery";
 
-function Profile({ user, setChats,JWT }) {
+function Profile({ user, setChats,JWT,chats }) {
 
     const contactInput = useRef(null);
 
@@ -18,9 +18,22 @@ function Profile({ user, setChats,JWT }) {
 
     async function newChat() {
         if (/\S/.test(contactInput.current.value)) {
+            const exists=chats.filter(chat=>chat.user.username===contactInput.current.value)
+            if(exists.length>0) {
+                chats.forEach(chat=>{
+                    chat.classes=""
+                })
+                exists[0].classes="selected-preview"
+                contactInput.current.value = '';
+                updateDismiss();
+                setChats(chats => [...chats]);
+                return
+            }
             let chat=await AddChat(contactInput.current.value,JWT)
             if(!chat){
                 alert("Chat name not found!")
+                contactInput.current.value = '';
+                updateDismiss();
                 return
             }
             chat.classes=""

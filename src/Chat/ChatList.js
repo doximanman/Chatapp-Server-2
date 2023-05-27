@@ -24,7 +24,7 @@ function ChatList({chats, setChats}) {
                 return chat.classes.includes("selected-preview");
             });
             if(selectedChat.length>0){
-                selectedChat[0].classes.replace("selected-preview", " ");
+                selectedChat[0].classes=selectedChat[0].classes.replace("selected-preview", " ");
             }
             chat.classes+=" selected-preview";
             selected = true;
