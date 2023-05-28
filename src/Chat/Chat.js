@@ -1,43 +1,70 @@
 import "./Chat.css"
-import mainPFP from "../Pictures/user3-icon.jpg";
 import Profile from "./Profile";
 import ChatTitle from "./ChatTitle";
-import { useState, useEffect } from "react";
-import MessageList from "./MessageList";
+import {useState, useEffect} from "react";
 import ChatList from "./ChatList";
-import contacts from "./Contacts"
-import MessageSender from "./MessageSender";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {ValidateUser} from "../ServerQuery/UserQuery";
+import {GetChats} from "../ServerQuery/ChatQuery";
+import ChatBody from "./ChatBody";
 
-function Chat() {
-
-    const [chats, setContacts] = useState(contacts);
-
-    const user = {
-        pfp: JSON.parse(sessionStorage.getItem('currentUser'))['picture'],
-        name: JSON.parse(sessionStorage.getItem('currentUser'))['displayName']
-    }
-
-    const [selectedUser, setSelectedUser] = useState(chats.filter((contact) => {
-        return contact.classes.includes("selected-preview");
-    })[0]);
+function Chat({user}) {
 
     const navigate = useNavigate();
+
+    const [JWT, setJWT] = useState(null);
+
+    const [chats, setChats] = useState(null);
+
+    const[selectedChat,setSelectedChat]=useState(null)
+
+
+
+    useEffect(()=>{
+        if(chats)
+            setSelectedChat(chats.filter(chat => {
+                return chat.classes.includes("selected-preview")
+            })[0])
+    },[chats])
+
     useEffect(() => {
-        if (!JSON.parse(sessionStorage.getItem('currentUser'))['username']) {
-            navigate("/Login");
+        if (!user) {
+            navigate("/Login")
+            return;
         }
-    }, []);
+        // sets up initial state
+        // get JWT
+        const getJWT = async () => {
+            setJWT(await ValidateUser(user.username, user.password))
+        }
+        if (!JWT) {
+            getJWT()
+            return;
+        }
+        // chat list
+        const initializeChats = async () => {
+            let chats = await GetChats(JWT)
+            chats.forEach(chat=>{
+                chat.classes=""
+            })
+            setChats(chats)
+        }
+        if (!chats)
+            initializeChats();
+    })
+
+    if (!user || !JWT || !chats) {
+        return (<>Loading...</>);
+    }
 
     return (
         <>
             <div id="main">
-                <Profile user={user} setContacts={setContacts} />
-                <ChatList chats={chats} user={selectedUser} setSelectedUser={setSelectedUser} />
+                <Profile user={user} chats={chats} setChats={setChats} JWT={JWT}/>
+                <ChatList chats={chats} setChats={setChats}/>
                 <div id="chat">
-                    <ChatTitle user={selectedUser} />
-                    <MessageList user={selectedUser} />
-                    <MessageSender contact={selectedUser} setSelectedUser={setSelectedUser} />
+                    <ChatTitle chat={selectedChat}/>
+                    <ChatBody user={user} chat={selectedChat} JWT={JWT} setChats={setChats}/>
                 </div>
             </div>
         </>

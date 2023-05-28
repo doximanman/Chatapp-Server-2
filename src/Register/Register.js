@@ -5,6 +5,7 @@ import Title from '../FormsItems/Title';
 import BottomMessage from '../FormsItems/BottomMessage';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
+import {AddUser, UserExists} from "../ServerQuery/UserQuery";
 
 
 function Register() {
@@ -56,16 +57,6 @@ function Register() {
 
     }
 
-    const isUserExist = (username, password) => {
-        let users = JSON.parse(sessionStorage.getItem('users'));
-        for (let i = 0; i < users.length; i++) {
-            if (users[i]['username'] === username && users[i]['password'] === password) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     const validateInput = e => {
         let { name, value } = e.target;
         setError(prev => {
@@ -101,13 +92,13 @@ function Register() {
     }
 
     const navigate = useNavigate();
-    const handleRegister = e => {
+    async function handleRegister(e){
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
         const repeatPassword = input.RepeatPassword;
         const displayName = input.DisplayName;
-        const picture = input.Picture;
+        const profilePic = input.Picture;
         let error = 0;
         if (!username || !usernameRegExp.test(username)) {
             setError(prev => ({
@@ -137,31 +128,25 @@ function Register() {
             }));
             error = 1;
         }
-        if (!picture) {
+        if (!profilePic) {
             setError(prev => ({
                 ...prev,
-                Picture: "Please choose a picture."
+                Picture: "Please choose a profilePic."
             }));
             error = 1;
         }
         if (error) {
             return;
         }
-        if (isUserExist(username, password)) {
+        if (await UserExists(username, password)) {
             setError(prev => ({
                 ...prev,
-                Username: "Username and password already exist, please try again."
+                Username: "User already exists, please try again."
             }));
         }
         else {
-            const userData = { username, password, displayName, picture };
-            const storedUsers = sessionStorage.getItem('users');
-            let users = [];
-            if (storedUsers) {
-                users = JSON.parse(storedUsers);
-            }
-            users.push(userData);
-            sessionStorage.setItem('users', JSON.stringify(users));
+            const userData = { username, password, displayName, profilePic };
+            await AddUser(userData)
             navigate("/Login");
         }
     }

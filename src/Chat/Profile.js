@@ -1,9 +1,9 @@
 import add from "../Pictures/add.png";
-import userPFP from "../Pictures/user1-icon.jpg"
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {AddChat} from "../ServerQuery/ChatQuery";
 
-function Profile({ user, setContacts }) {
+function Profile({ user, setChats,JWT,chats }) {
 
     const contactInput = useRef(null);
 
@@ -16,32 +16,43 @@ function Profile({ user, setContacts }) {
         }
     }
 
-    function newContact() {
+    async function newChat() {
         if (/\S/.test(contactInput.current.value)) {
-            let contact = {
-                pfp: userPFP,
-                name: contactInput.current.value,
-                lastDate: "25/4/2023, 11:01:54 PM",
-                lastMessage: "WORLD",
-                classes: "",
-                messages: []
+            const exists=chats.filter(chat=>chat.user.username===contactInput.current.value)
+            if(exists.length>0) {
+                chats.forEach(chat=>{
+                    chat.classes=""
+                })
+                exists[0].classes="selected-preview"
+                contactInput.current.value = '';
+                updateDismiss();
+                setChats(chats => [...chats]);
+                return
             }
-            setContacts(contacts => [...contacts, contact]);
+            let chat=await AddChat(contactInput.current.value,JWT)
+            if(!chat){
+                alert("Chat name not found!")
+                contactInput.current.value = '';
+                updateDismiss();
+                return
+            }
+            chat.classes=""
+            setChats(chats => [...chats, chat]);
             contactInput.current.value = '';
+            updateDismiss();
         }
     }
+    const navigate=useNavigate();
 
-    const navigate = useNavigate();
-    const handleLogout = e => {
-        sessionStorage.setItem('currentUser', JSON.stringify([]));
-        navigate("/Login");
+    const handleLogout = () => {
+        navigate("/Login")
     }
         
 
     return (
         <div id="profile">
-            <img className="profile-pic" src={user.pfp} alt="Profile" />
-            <div id="user-name" className="profile-name">{user.name}</div>
+            <img className="profile-pic" src={user.profilePic} alt="Profile" />
+            <div id="user-name" className="profile-name">{user.displayName}</div>
             <img id="add-chat" data-bs-toggle="modal" data-bs-target="#addChat" src={add}
                 alt="New Chat" />
             <button type="button" onClick={handleLogout} className="btn btn-danger btn-sm" id="logout">Logout</button>
@@ -57,7 +68,7 @@ function Profile({ user, setContacts }) {
                             <input ref={contactInput} onKeyUp={updateDismiss} id="nameInput" type="text" className="col-12" placeholder="Contact Name" />
                         </div>
                         <div className="modal-footer">
-                            <button onClick={newContact} id="addchatBTN" type="button" className="btn btn-primary">Add</button>
+                            <button onClick={newChat} id="addchatBTN" type="button" className="btn btn-primary">Add</button>
                         </div>
                     </div>
                 </div>
