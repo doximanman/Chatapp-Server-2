@@ -6,6 +6,9 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "custom-env": "^2.0.2",
     "express": "^4.18.2",
     "jquery": "^3.6.4",
     "mongodb": "^5.5.0",
@@ -17,9 +20,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "SET NODE_ENV=local && react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "SET NODE_ENV=test &&react-scripts test",
     "eject": "react-scripts eject",
     "main": "node $NODE_DEBUG_OPTION ./App.js"
   },

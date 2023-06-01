@@ -15,7 +15,7 @@ function Profile({ user, setChats,JWT,chats }) {
             document.getElementById('addchatBTN').removeAttribute('data-bs-dismiss');
         }
     }
-
+    
     async function newChat() {
         if (/\S/.test(contactInput.current.value)) {
             const exists=chats.filter(chat=>chat.user.username===contactInput.current.value)
