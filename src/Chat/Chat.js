@@ -1,14 +1,14 @@
 import "./Chat.css"
 import Profile from "./Profile";
 import ChatTitle from "./ChatTitle";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import ChatList from "./ChatList";
-import {useNavigate} from "react-router-dom";
-import {ValidateUser} from "../ServerQuery/UserQuery";
-import {GetChats} from "../ServerQuery/ChatQuery";
+import { useNavigate } from "react-router-dom";
+import { ValidateUser } from "../ServerQuery/UserQuery";
+import { GetChats } from "../ServerQuery/ChatQuery";
 import ChatBody from "./ChatBody";
 
-function Chat({user}) {
+function Chat({ user }) {
 
     const navigate = useNavigate();
 
@@ -16,16 +16,16 @@ function Chat({user}) {
 
     const [chats, setChats] = useState(null);
 
-    const[selectedChat,setSelectedChat]=useState(null)
+    const [selectedChat, setSelectedChat] = useState(null)
 
 
 
-    useEffect(()=>{
-        if(chats)
+    useEffect(() => {
+        if (chats)
             setSelectedChat(chats.filter(chat => {
                 return chat.classes.includes("selected-preview")
             })[0])
-    },[chats])
+    }, [chats])
 
     useEffect(() => {
         if (!user) {
@@ -44,8 +44,8 @@ function Chat({user}) {
         // chat list
         const initializeChats = async () => {
             let chats = await GetChats(JWT)
-            chats.forEach(chat=>{
-                chat.classes=""
+            chats.forEach(chat => {
+                chat.classes = ""
             })
             setChats(chats)
         }
@@ -60,11 +60,11 @@ function Chat({user}) {
     return (
         <>
             <div id="main">
-                <Profile user={user} chats={chats} setChats={setChats} JWT={JWT}/>
-                <ChatList chats={chats} setChats={setChats}/>
+                <Profile user={user} chats={chats} setChats={setChats} JWT={JWT} />
+                <ChatList chats={chats} setChats={setChats} />
                 <div id="chat">
-                    <ChatTitle chat={selectedChat}/>
-                    <ChatBody user={user} chat={selectedChat} JWT={JWT} setChats={setChats}/>
+                    <ChatTitle chat={selectedChat} />
+                    <ChatBody user={user} chat={selectedChat} JWT={JWT} setChats={setChats} />
                 </div>
             </div>
         </>

@@ -10,7 +10,7 @@ const User = new Schema({
         type: String
     },
     profilePic: {
-        type: Image
+        type: String
     }
 });
 module.exports = mongoose.model('User', User);
