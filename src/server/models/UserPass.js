@@ -10,4 +10,5 @@ const UserPass = new Schema({
         type: String
     }
 });
+
 module.exports = mongoose.model('UserPass', UserPass);
