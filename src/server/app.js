@@ -20,7 +20,7 @@ mongoose.connect(process.env.CONNECTION_STRING,
         useUnifiedTopology: true
     });
 
-const users = require('./routers/User');
+const users = require('./routers/UserPassName');
 app.use('/Users', users);
 
 app.listen(process.env.PORT);

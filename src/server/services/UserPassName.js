@@ -1,6 +1,8 @@
 const UserPassName = require('../models/UserPassName')
 
-const createUserPassName = async (username, password,  displayName, profilePic) => {
+
+const getUserByUsername = async (username) => { return await UserPassName.findOne({ username: username }); };
+const createUserPassName = async (username, password, displayName, profilePic) => {
     const userPassName = new UserPassName({ username: username, password: password, displayName: displayName, profilePic: profilePic });
     return await userPassName.save();
 };
@@ -9,4 +11,4 @@ const createUserPassName = async (username, password,  displayName, profilePic) 
 //     return await User.findById(username);
 // };
 
-module.exports = { createUserPassName };
+module.exports = { getUserByUsername, createUserPassName };
