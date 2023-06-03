@@ -17,5 +17,4 @@ const getUserByUsername = async (req, res) => {
     res.json({username: user.username, displayName: user.displayName, profilePic: user.profilePic})
 };
 
-
 module.exports = { createUserPassName, getUserByUsername };
