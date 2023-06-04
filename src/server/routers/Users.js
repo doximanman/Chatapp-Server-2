@@ -6,5 +6,5 @@ const UsersController = require('../controllers/Users');
 router.route('/')
     .post(UsersController.createUserPassName)
 router.route('/:username')
-    .get(UsersController.getUserByUsername)
+    .get(UsersController.isLoggedIn, UsersController.getUserByUsername)
 module.exports = router;

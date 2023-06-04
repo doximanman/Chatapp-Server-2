@@ -7,8 +7,4 @@ const createUserPassName = async (username, password, displayName, profilePic) =
     return await user.save();
 };
 
-// const getUserByUsername = async (username) => {
-//     return await User.findById(username);
-// };
-
 module.exports = { getUserByUsername, createUserPassName };

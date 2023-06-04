@@ -23,4 +23,7 @@ mongoose.connect(process.env.CONNECTION_STRING,
 const users = require('./routers/Users');
 app.use('/Users', users);
 
+const tokens = require('./routers/Tokens');
+app.use('/Tokens', tokens);
+
 app.listen(process.env.PORT);
