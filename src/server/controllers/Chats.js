@@ -40,10 +40,10 @@ const createChat = async (req, res) => {
         return res.status(404).json({ errors: ["Cannot create a chat with yourself"] });
     }
     const newChat = await ChatService.createChat(res.locals.username, req.body.username);
-    if (newChat == 0) {
+    if (newChat === 0) {
         return res.status(404).json({ errors: ['No such user'] });
     }
-    else if (newChat == 1) {
+    else if (newChat === 1) {
         return res.status(404).json({ errors: ['Chat already exist'] });
     }
     const user = await UserService.getUserByUsername(req.body.username);
