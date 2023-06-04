@@ -45,7 +45,11 @@ const getChats = async (username) => {
 };
 
 const getChatById = async (id) => {
-
+    const chatById = await Chat.findOne({ _id: id });
+    if (chatById === []) {
+        return null;
+    }
+    return { id: id, users: [await getUserDetailes(chatById.users[0]), await getUserDetailes(chatById.users[1])], messages: chatById.messages }
 };
 
-module.exports = { createChat, getChats };
+module.exports = { createChat, getChats, getChatById };

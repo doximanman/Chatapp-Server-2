@@ -47,7 +47,7 @@ const createChat = async (req, res) => {
         return res.status(404).json({ errors: ['Chat already exist'] });
     }
     const user = await UserService.getUserByUsername(req.body.username);
-    res.json({id: newChat._id, user: {username: user.username, displayName: user.displayName, profilePic: user.profilePic}});
+    res.json({ id: newChat._id, user: { username: user.username, displayName: user.displayName, profilePic: user.profilePic } });
 }
 
 const getChats = async (req, res) => {
@@ -55,4 +55,12 @@ const getChats = async (req, res) => {
     res.json(chats);
 };
 
-module.exports = { createChat, isLoggedIn, getChats };
+const getChatById = async (req, res) => {
+    const chat = await ChatService.getChatById(req.params.id);
+    if (chat === null) {
+        return res.status(404).json({ errors: ["Chat doesn't exist"] });
+    }
+    res.json(chat);
+};
+
+module.exports = { createChat, isLoggedIn, getChats, getChatById };
