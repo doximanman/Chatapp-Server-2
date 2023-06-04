@@ -79,4 +79,12 @@ const addMessageToChat = async (req, res) => {
     res.json(newMessage);
 };
 
-module.exports = { createChat, isLoggedIn, getChats, getChatById, deleteChatById, addMessageToChat };
+const getMessagesByChatId = async (req, res) => {
+    const messages = await ChatService.getMessagesByChatId(req.params.id);
+    if (messages === null) {
+        return res.status(404).json({ errors: ["Chat not found"] });
+    }
+    res.json(messages);
+};
+
+module.exports = { createChat, isLoggedIn, getChats, getChatById, deleteChatById, addMessageToChat, getMessagesByChatId };

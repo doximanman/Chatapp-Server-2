@@ -10,5 +10,6 @@ router.route('/:id')
     .delete(ChatController.isLoggedIn, ChatController.deleteChatById)
 router.route('/:id/Messages')
     .post(ChatController.isLoggedIn, ChatController.addMessageToChat)
+    .get(ChatController.isLoggedIn, ChatController.getMessagesByChatId)
 
 module.exports = router;

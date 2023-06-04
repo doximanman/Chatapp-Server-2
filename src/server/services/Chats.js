@@ -71,7 +71,20 @@ const addMessageToChat = async (sender, chatId, content) => {
         { $set: { messages: [...chatById.messages, newMessage._id] } }
     );
     const senderDetailes = await getUserDetailes(sender);
-    return { id: newMessage._id, created: newMessage.created, sender: { username: senderDetailes.username, displayName: senderDetailes.displayName, profilePic: senderDetailes.profilePic }, content: content };
+    return { id: newMessage._id, created: newMessage.created, sender: senderDetailes, content: content };
 };
 
-module.exports = { createChat, getChats, getChatById, deleteChatById, addMessageToChat };
+const getMessagesByChatId = async (chatId) => {
+    const chatById = await Chat.findOne({ _id: chatId });
+    if (chatById === null) {
+        return null;
+    }
+    let messages = [];
+    for (const messageId of chatById.messages) {
+        const message = await MessageService.getMessageById(messageId);
+        messages.push({ id: messageId, created: message.created, sender: { username: message.sender }, content: message.content });
+    }
+    return messages;
+};
+
+module.exports = { createChat, getChats, getChatById, deleteChatById, addMessageToChat, getMessagesByChatId };
