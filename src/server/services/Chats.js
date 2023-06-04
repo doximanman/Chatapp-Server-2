@@ -6,8 +6,8 @@ const UserService = require('../services/Users')
 const isChatExist = async (username1, username2) => {
     const chatOp1 = await Chat.find({ users: [username1, username2] });
     const chatOp2 = await Chat.find({ users: [username2, username1] });
-    console.log(chatOp1.length != 0 || chatOp2.length != 0);
-    return (chatOp1.length != 0 || chatOp2.length != 0);
+    console.log(chatOp1.length !== 0 || chatOp2.length !== 0);
+    return (chatOp1.length !== 0 || chatOp2.length !== 0);
 };
 
 const createChat = async (sender, receiver) => {
@@ -26,4 +26,23 @@ const createChat = async (sender, receiver) => {
     }
 };
 
-module.exports = { createChat };
+const getUserDetailes = async (username) => {
+    const user = await UserService.getUserByUsername(username);
+    return { username: username, displayName: user.displayName, profilePic: user.profilePic }; 
+};
+
+const getChats = async (username) => {
+    const allChats = await Chat.find({});
+    let chats = [];
+    for (const chat of allChats) {
+        if (chat.users[0] === username) {
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: chat.messages ? [chat.messages.length - 1] : null });
+        }
+        else if (chat.users[1] === username) {
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: chat.messages ? [chat.messages.length - 1] : null });
+        }
+    };
+    return chats;
+};
+
+module.exports = { createChat, getChats };

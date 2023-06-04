@@ -1,5 +1,5 @@
-const Chat = require('../services/Chats');
-const User = require('../services/Users');
+const ChatService = require('../services/Chats');
+const UserService = require('../services/Users');
 // Use a library to perform the cryptographic operations
 const jwt = require("jsonwebtoken")
 const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
@@ -28,7 +28,7 @@ const isLoggedIn = (req, res, next) => {
 }
 
 const getUserByUsername = async (req, res) => {
-    const user = await User.getUserByUsername(req.params.username);
+    const user = await UserService.getUserByUsername(req.params.username);
     if (!user) {
         return res.status(404).json({ errors: ['User not exist'] });
     }
@@ -36,14 +36,23 @@ const getUserByUsername = async (req, res) => {
 };
 
 const createChat = async (req, res) => {
-    const newChat = await Chat.createChat(res.locals.username, req.body.username);
+    if (res.locals.username === req.body.username) {
+        return res.status(404).json({ errors: ["Cannot create a chat with yourself"] });
+    }
+    const newChat = await ChatService.createChat(res.locals.username, req.body.username);
     if (newChat == 0) {
         return res.status(404).json({ errors: ['No such user'] });
     }
     else if (newChat == 1) {
         return res.status(404).json({ errors: ['Chat already exist'] });
     }
-    const user = await User.getUserByUsername(req.body.username);
+    const user = await UserService.getUserByUsername(req.body.username);
     res.json({id: newChat._id, user: {username: user.username, displayName: user.displayName, profilePic: user.profilePic}});
 }
-module.exports = { createChat, isLoggedIn };
+
+const getChats = async (req, res) => {
+    const chats = await ChatService.getChats(res.locals.username);
+    res.json(chats);
+};
+
+module.exports = { createChat, isLoggedIn, getChats };
