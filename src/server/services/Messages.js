@@ -1,11 +1,11 @@
-const Users = require('../models/Users')
+const Message = require('../models/Messages')
 
-
-const getUserByUsername = async (username) => { return await Users.findOne({ username: username }); };
-const createUserPassName = async (username, password, displayName, profilePic) => {
-    const user = new Users({ username: username, password: password, displayName: displayName, profilePic: profilePic });
-    return await user.save();
+const getMessageById = async (id) => {
+    return await Message.findById(id);
+};
+const createMessage = async (sender, content) => {
+    const msg = new Message(Date.now, sender, content);
+    return await msg.save();
 };
 
-
-module.exports = { getUserByUsername, createUserPassName };
+module.exports = { getMessageById, createMessage };

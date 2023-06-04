@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const Message = new Schema({
-    id: {
-        type: Int32
-    },
+const Chats = new Schema({
     users: {
         type: Array
     },

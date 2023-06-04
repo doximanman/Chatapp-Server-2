@@ -1,17 +1,13 @@
 const mongoose = require('mongoose');
-const User = require("./Users")
 
 const Schema = mongoose.Schema;
 
 const Messages = new Schema({
-    id: {
-        type: Int32
-    },
     created: {
-        type: String
+        type: Date
     },
     sender: {
-        type: User
+        type: String
     },
     content: {
         type: String

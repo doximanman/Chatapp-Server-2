@@ -1,15 +1,9 @@
-const UsersService = require('../services/Users');
+const Chat = require('../services/Chats');
+const User = require('../services/Users');
 // Use a library to perform the cryptographic operations
 const jwt = require("jsonwebtoken")
 const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
 
-const createUser = async (req, res) => {
-    const existUser = await UsersService.getUserByUsername(req.body.username);
-    if (existUser) {
-        return res.status(404).json({ errors: ["User already exist"] });
-    }
-    res.json(await UsersService.createUserPassName(req.body.username, req.body.password, req.body.displayName, req.body.profilePic));
-};
 
 // Ensure that the user sent a valid token
 const isLoggedIn = (req, res, next) => {
@@ -34,11 +28,22 @@ const isLoggedIn = (req, res, next) => {
 }
 
 const getUserByUsername = async (req, res) => {
-    const user = await UsersService.getUserByUsername(req.params.username);
+    const user = await User.getUserByUsername(req.params.username);
     if (!user) {
         return res.status(404).json({ errors: ['User not exist'] });
     }
     res.json({ username: user.username, displayName: user.displayName, profilePic: user.profilePic })
 };
 
-module.exports = {  getUserByUsername, isLoggedIn, createUser };
+const createChat = async (req, res) => {
+    const newChat = await Chat.createChat(res.locals.username, req.body.username);
+    if (newChat == 0) {
+        return res.status(404).json({ errors: ['No such user'] });
+    }
+    else if (newChat == 1) {
+        return res.status(404).json({ errors: ['Chat already exist'] });
+    }
+    const user = await User.getUserByUsername(req.body.username);
+    res.json({id: newChat._id, user: {username: user.username, displayName: user.displayName, profilePic: user.profilePic}});
+}
+module.exports = { createChat, isLoggedIn };

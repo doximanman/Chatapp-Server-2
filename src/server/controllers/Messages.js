@@ -1,15 +1,9 @@
-const UsersService = require('../services/Users');
+const Users = require('../services/Users');
+const Message = require('../services/Messages');
 // Use a library to perform the cryptographic operations
 const jwt = require("jsonwebtoken")
 const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
 
-const createUser = async (req, res) => {
-    const existUser = await UsersService.getUserByUsername(req.body.username);
-    if (existUser) {
-        return res.status(404).json({ errors: ["User already exist"] });
-    }
-    res.json(await UsersService.createUserPassName(req.body.username, req.body.password, req.body.displayName, req.body.profilePic));
-};
 
 // Ensure that the user sent a valid token
 const isLoggedIn = (req, res, next) => {
@@ -33,12 +27,14 @@ const isLoggedIn = (req, res, next) => {
         return res.status(403).send('Token required');
 }
 
+
 const getUserByUsername = async (req, res) => {
-    const user = await UsersService.getUserByUsername(req.params.username);
+    const user = await Users.getUserByUsername(req.params.username);
     if (!user) {
         return res.status(404).json({ errors: ['User not exist'] });
     }
     res.json({ username: user.username, displayName: user.displayName, profilePic: user.profilePic })
 };
 
-module.exports = {  getUserByUsername, isLoggedIn, createUser };
+
+module.exports = { createUserPassName, getUserByUsername, isLoggedIn };

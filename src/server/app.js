@@ -26,4 +26,7 @@ app.use('/Users', users);
 const tokens = require('./routers/Tokens');
 app.use('/Tokens', tokens);
 
+const chats = require('./routers/Chats');
+app.use('/Chats', chats);
+
 app.listen(process.env.PORT);
