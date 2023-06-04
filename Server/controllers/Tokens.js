@@ -10,7 +10,7 @@ const createToken = async (req, res) => {
     }
     const payload = { "username": user.username }
     const token = jwt.sign(payload, key, { algorithm: 'HS256' });
-    res.status(201).json({ token });
+    res.status(201).send(token);
     res.end();
 };
 

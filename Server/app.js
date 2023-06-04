@@ -21,12 +21,12 @@ mongoose.connect(process.env.CONNECTION_STRING,
     });
 
 const users = require('./routers/Users');
-app.use('/Users', users);
+app.use('/api/Users', users);
 
 const tokens = require('./routers/Tokens');
-app.use('/Tokens', tokens);
+app.use('/api/Tokens', tokens);
 
 const chats = require('./routers/Chats');
-app.use('/Chats', chats);
+app.use('/api/Chats', chats);
 
 app.listen(process.env.PORT);
