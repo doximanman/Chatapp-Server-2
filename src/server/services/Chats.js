@@ -1,5 +1,5 @@
 const Chat = require('../models/Chats')
-const Message = require('../models/Messages')
+const MessageService = require('../services/Messages')
 const UserService = require('../services/Users')
 
 const isChatExist = async (username1, username2) => {
@@ -45,7 +45,7 @@ const getChats = async (username) => {
 
 const getChatById = async (id) => {
     const chatById = await Chat.findOne({ _id: id });
-    if (chatById === []) {
+    if (chatById === null) {
         return null;
     }
     return { id: id, users: [await getUserDetailes(chatById.users[0]), await getUserDetailes(chatById.users[1])], messages: chatById.messages }
@@ -60,4 +60,18 @@ const deleteChatById = async (id) => {
     return 1;
 };
 
-module.exports = { createChat, getChats, getChatById, deleteChatById };
+const addMessageToChat = async (sender, chatId, content) => {
+    const chatById = await Chat.findOne({ _id: chatId });
+    if (chatById === null) {
+        return null;
+    }
+    const newMessage = await MessageService.createMessage(sender, content);
+    await Chat.updateOne(
+        { _id: chatId },
+        { $set: { messages: [...chatById.messages, newMessage._id] } }
+    );
+    const senderDetailes = await getUserDetailes(sender);
+    return { id: newMessage._id, created: newMessage.created, sender: { username: senderDetailes.username, displayName: senderDetailes.displayName, profilePic: senderDetailes.profilePic }, content: content };
+};
+
+module.exports = { createChat, getChats, getChatById, deleteChatById, addMessageToChat };

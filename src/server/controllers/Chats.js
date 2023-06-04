@@ -70,4 +70,13 @@ const deleteChatById = async (req, res) => {
     }
     return res.status(204).json();
 };
-module.exports = { createChat, isLoggedIn, getChats, getChatById, deleteChatById };
+
+const addMessageToChat = async (req, res) => {
+    const newMessage = await ChatService.addMessageToChat(res.locals.username, req.params.id, req.body.msg);
+    if (newMessage === null) {
+        return res.status(404).json({ errors: ["Chat not found"] });
+    }
+    res.json(newMessage);
+};
+
+module.exports = { createChat, isLoggedIn, getChats, getChatById, deleteChatById, addMessageToChat };
