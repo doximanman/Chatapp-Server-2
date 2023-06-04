@@ -63,4 +63,11 @@ const getChatById = async (req, res) => {
     res.json(chat);
 };
 
-module.exports = { createChat, isLoggedIn, getChats, getChatById };
+const deleteChatById = async (req, res) => {
+    const deleteCode = await ChatService.deleteChatById(req.params.id);
+    if (deleteCode === 0) {
+        return res.status(404).json({ errors: ["Chat not found"] });
+    }
+    return res.status(204).json();
+};
+module.exports = { createChat, isLoggedIn, getChats, getChatById, deleteChatById };

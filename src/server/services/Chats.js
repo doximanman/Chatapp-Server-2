@@ -2,7 +2,6 @@ const Chat = require('../models/Chats')
 const Message = require('../models/Messages')
 const UserService = require('../services/Users')
 
-
 const isChatExist = async (username1, username2) => {
     const chatOp1 = await Chat.find({ users: [username1, username2] });
     const chatOp2 = await Chat.find({ users: [username2, username1] });
@@ -35,10 +34,10 @@ const getChats = async (username) => {
     let chats = [];
     for (const chat of allChats) {
         if (chat.users[0] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: chat.messages ? [chat.messages.length - 1] : null });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: chat.messages.length !== 0 ? [chat.messages.length - 1] : null });
         }
         else if (chat.users[1] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: chat.messages ? [chat.messages.length - 1] : null });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: chat.messages !== 0 ? [chat.messages.length - 1] : null });
         }
     };
     return chats;
@@ -52,4 +51,13 @@ const getChatById = async (id) => {
     return { id: id, users: [await getUserDetailes(chatById.users[0]), await getUserDetailes(chatById.users[1])], messages: chatById.messages }
 };
 
-module.exports = { createChat, getChats, getChatById };
+const deleteChatById = async (id) => {
+    const chatById = await Chat.findOne({ _id: id });
+    if (chatById === null) {
+        return 0;
+    }
+    await Chat.deleteOne({ _id: id });
+    return 1;
+};
+
+module.exports = { createChat, getChats, getChatById, deleteChatById };

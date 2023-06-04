@@ -7,4 +7,5 @@ router.route('/')
     .get(ChatController.isLoggedIn, ChatController.getChats)
 router.route('/:id')
     .get(ChatController.isLoggedIn, ChatController.getChatById)
+    .delete(ChatController.isLoggedIn, ChatController.deleteChatById)
 module.exports = router;
