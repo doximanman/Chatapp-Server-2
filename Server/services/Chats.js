@@ -34,12 +34,12 @@ const getChats = async (username) => {
     let chats = [];
     for (const chat of allChats) {
         if (chat.users[0] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: chat.messages.length !== 0 ? chat.messages[chat.messages.length - 1] : null });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: chat.messages.length !== 0 ? [chat.messages.length - 1] : null });
         }
         else if (chat.users[1] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: chat.messages.length !== 0 ? chat.messages[chat.messages.length - 1] : null });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: chat.messages !== 0 ? [chat.messages.length - 1] : null });
         }
-    }
+    };
     return chats;
 };
 
