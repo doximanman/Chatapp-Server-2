@@ -1,6 +1,12 @@
 const Chat = require('../models/Chats')
-const MessageService = require('./Messages')
-const UserService = require('./Users')
+const MessageService = require('../services/Messages')
+const UserService = require('../services/Users')
+
+const isChatExist = async (username1, username2) => {
+    const chatOp1 = await Chat.find({ users: [username1, username2] });
+    const chatOp2 = await Chat.find({ users: [username2, username1] });
+    return chatOp1.length !== 0 || chatOp2.length !== 0;
+};
 
 const createChat = async (sender, receiver) => {
     if (await UserService.getUserByUsername(receiver) == null) {
