@@ -4,7 +4,7 @@ var app = express();
 app.use(express.static('public'));
 
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json());
 
 const cors = require('cors');
