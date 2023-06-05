@@ -37,14 +37,11 @@ const getUserByUsername = async (req, res) => {
 
 const createChat = async (req, res) => {
     if (res.locals.username === req.body.username) {
-        return res.status(404).json({ errors: ["Cannot create a chat with yourself"] });
+        return res.status(400).json({ errors: ["Thou shalt not talk with thy self"] });
     }
     const newChat = await ChatService.createChat(res.locals.username, req.body.username);
     if (newChat === 0) {
         return res.status(404).json({ errors: ['No such user'] });
-    }
-    else if (newChat === 1) {
-        return res.status(404).json({ errors: ['Chat already exist'] });
     }
     const user = await UserService.getUserByUsername(req.body.username);
     res.json({ id: newChat._id, user: { username: user.username, displayName: user.displayName, profilePic: user.profilePic } });
@@ -56,33 +53,45 @@ const getChats = async (req, res) => {
 };
 
 const getChatById = async (req, res) => {
-    const chat = await ChatService.getChatById(req.params.id);
-    if (chat === null) {
-        return res.status(404).json({ errors: ["Chat doesn't exist"] });
+    const chat = await ChatService.getChatById(res.locals.username, req.params.id);
+    if (chat === 0) {
+        return res.status(404).json({ errors: ["Chat not found"] });
+    }
+    if (chat === 1) {
+        return res.status(401).json({ errors: ["Unauthorized"] });
     }
     res.json(chat);
 };
 
 const deleteChatById = async (req, res) => {
-    const deleteCode = await ChatService.deleteChatById(req.params.id);
+    const deleteCode = await ChatService.deleteChatById(res.locals.username, req.params.id);
     if (deleteCode === 0) {
         return res.status(404).json({ errors: ["Chat not found"] });
+    }
+    if (deleteCode === 1) {
+        return res.status(401).json({ errors: ["Unauthorized"] });
     }
     return res.status(204).json();
 };
 
 const addMessageToChat = async (req, res) => {
     const newMessage = await ChatService.addMessageToChat(res.locals.username, req.params.id, req.body.msg);
-    if (newMessage === null) {
+    if (newMessage === 0) {
         return res.status(404).json({ errors: ["Chat not found"] });
+    }
+    if (newMessage === 1) {
+        return res.status(401).json({ errors: ["Unauthorized"] });
     }
     res.json(newMessage);
 };
 
 const getMessagesByChatId = async (req, res) => {
-    const messages = await ChatService.getMessagesByChatId(req.params.id);
-    if (messages === null) {
+    const messages = await ChatService.getMessagesByChatId(res.locals.username, req.params.id);
+    if (messages === 0) {
         return res.status(404).json({ errors: ["Chat not found"] });
+    }
+    if (messages === 1) {
+        return res.status(401).json({ errors: ["Unauthorized"] });
     }
     res.json(messages);
 };

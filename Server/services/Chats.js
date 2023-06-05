@@ -23,41 +23,52 @@ const getChats = async (username) => {
     const allChats = await Chat.find({});
     let chats = [];
     for (const chat of allChats) {
-        let lastMessage = chat.messages.length !== 0 ? await MessageService.getMessageById(chat.messages[chat.messages.length - 1]) : null;
-        if (lastMessage !== null) {
-            lastMessage = lastMessage.content;
-        }
+        let lastMessage = chat.messages.length !== 0 ? await MessageService.getMessageById(chat.messages[chat.messages.length - 1]) : [];
         if (chat.users[0] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: lastMessage});
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: lastMessage !== [] ? { id: lastMessage._id, created: lastMessage.created, content: lastMessage.content } : [] });
         }
         else if (chat.users[1] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: lastMessage});
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: lastMessage !== [] ? { id: lastMessage._id, created: lastMessage.created, content: lastMessage.content } : [] });
         }
     };
     return chats;
 };
 
-const getChatById = async (id) => {
-    const chatById = await Chat.findOne({ _id: id });
-    if (chatById === null) {
-        return null;
-    }
-    return { id: id, users: [await getUserDetailes(chatById.users[0]), await getUserDetailes(chatById.users[1])], messages: chatById.messages }
-};
-
-const deleteChatById = async (id) => {
+const getChatById = async (username, id) => {
     const chatById = await Chat.findOne({ _id: id });
     if (chatById === null) {
         return 0;
     }
+    if (chatById.users[0] !== username && chatById.users[1] !== username) {
+        return 1;
+    }
+    let messages = [];
+    for (const messageId of chatById.messages) {
+        const message = await MessageService.getMessageById(messageId);
+        messages.push({ id: message._id, created: message.created, sender: await getUserDetailes(message.sender), content: message.content });
+    }
+    return { id: id, users: [await getUserDetailes(chatById.users[0]), await getUserDetailes(chatById.users[1])], messages: messages };
+};
+
+const deleteChatById = async (username, id) => {
+    const chatById = await Chat.findOne({ _id: id });
+    if (chatById === null) {
+        return 0;
+    }
+    if (chatById.users[0] !== username && chatById.users[1] !== username) {
+        return 1;
+    }
     await Chat.deleteOne({ _id: id });
-    return 1;
+    return 2;
 };
 
 const addMessageToChat = async (sender, chatId, content) => {
     const chatById = await Chat.findOne({ _id: chatId });
     if (chatById === null) {
-        return null;
+        return 0;
+    }
+    if (chatById.users[0] !== sender && chatById.users[1] !== sender) {
+        return 1;
     }
     const newMessage = await MessageService.createMessage(sender, content);
     await Chat.updateOne(
@@ -68,10 +79,13 @@ const addMessageToChat = async (sender, chatId, content) => {
     return { id: newMessage._id, created: newMessage.created, sender: senderDetailes, content: content };
 };
 
-const getMessagesByChatId = async (chatId) => {
+const getMessagesByChatId = async (username, chatId) => {
     const chatById = await Chat.findOne({ _id: chatId });
     if (chatById === null) {
-        return null;
+        return 0;
+    }
+    if (chatById.users[0] !== username && chatById.users[1] !== username) {
+        return 1;
     }
     let messages = [];
     for (const messageId of chatById.messages) {
