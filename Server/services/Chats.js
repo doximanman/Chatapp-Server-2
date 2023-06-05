@@ -23,11 +23,15 @@ const getChats = async (username) => {
     const allChats = await Chat.find({});
     let chats = [];
     for (const chat of allChats) {
+        let lastMessage = chat.messages.length !== 0 ? await MessageService.getMessageById(chat.messages[chat.messages.length - 1]) : null;
+        if (lastMessage !== null) {
+            lastMessage = lastMessage.content;
+        }
         if (chat.users[0] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: chat.messages.length !== 0 ? [chat.messages.length - 1] : null });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: lastMessage});
         }
         else if (chat.users[1] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: chat.messages !== 0 ? [chat.messages.length - 1] : null });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: lastMessage});
         }
     };
     return chats;
