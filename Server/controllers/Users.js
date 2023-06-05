@@ -3,14 +3,6 @@ const UsersService = require('../services/Users');
 const jwt = require("jsonwebtoken")
 const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
 
-const createUser = async (req, res) => {
-    const user = await UsersService.createUser(req.body.username, req.body.password, req.body.displayName, req.body.profilePic);
-    if (typeof user === "string") {
-        return res.status(404).json({ errors: [user] });
-    }
-    res.json(user);
-};
-
 // Ensure that the user sent a valid token
 const isLoggedIn = (req, res, next) => {
     // If the request has an authorization header
@@ -33,6 +25,17 @@ const isLoggedIn = (req, res, next) => {
         return res.status(403).send('Token required');
 }
 
+// POST (create) new user
+const createUser = async (req, res) => {
+    const user = await UsersService.createUser(req.body.username, req.body.password, req.body.displayName, req.body.profilePic);
+    // print registration errors if exist
+    if (typeof user === "string") {
+        return res.status(404).json({ errors: [user] });
+    }
+    res.json(user);
+};
+
+// GET user detailes by its username if the username added his correct token to the request
 const getUserByUsername = async (req, res) => {
     if (res.locals.username !== req.params.username) {
         return res.status(401).json({ errors: ["Unauthorized"] });
