@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken")
 const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
 
 const createUser = async (req, res) => {
-    const existUser = await UsersService.getUserByUsername(req.body.username);
-    if (existUser) {
-        return res.status(404).json({ errors: ["User already exist"] });
+    const user = await UsersService.createUser(req.body.username, req.body.password, req.body.displayName, req.body.profilePic);
+    if (typeof user === "string") {
+        return res.status(404).json({ errors: [user] });
     }
-    res.json(await UsersService.createUserPassName(req.body.username, req.body.password, req.body.displayName, req.body.profilePic));
+    res.json(user);
 };
 
 // Ensure that the user sent a valid token
@@ -34,11 +34,14 @@ const isLoggedIn = (req, res, next) => {
 }
 
 const getUserByUsername = async (req, res) => {
+    if (res.locals.username !== req.params.username) {
+        return res.status(401).json({ errors: ["Unauthorized"] });
+    }
     const user = await UsersService.getUserByUsername(req.params.username);
     if (!user) {
-        return res.status(404).json({ errors: ['User not exist'] });
+        return res.status(404).json({ errors: ["User doesn't exist"] });
     }
     res.json({ username: user.username, displayName: user.displayName, profilePic: user.profilePic })
 };
 
-module.exports = {  getUserByUsername, isLoggedIn, createUser };
+module.exports = { getUserByUsername, isLoggedIn, createUser };
