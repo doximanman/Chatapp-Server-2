@@ -37,8 +37,9 @@ function Login({ setUser }) {
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
-        await sessionStorage.setItem('JWT',await ValidateUser(username, password))
-        if (sessionStorage.getItem('JWT')) {
+        const JWT=await ValidateUser(username, password)
+        if (JWT) {
+            sessionStorage.setItem('JWT',JWT)
             sessionStorage.setItem('username',username)
             const user = await GetUser(username, sessionStorage.getItem('JWT'));
             setUser(user)

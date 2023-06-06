@@ -15,15 +15,20 @@ function Chat({user,setUser}) {
     // used to navigate back to /login on logout
     const navigate = useNavigate();
 
+    // chat list to be shown on the left
     const [chats, setChats] = useState(null);
 
+    // selected chat to show messages and to highlight on the left
     const [selectedChat, setSelectedChat] = useState(null)
 
+    // for the socket
     const connected = useRef(false);
 
+    // creates a socket that stays between renders (only reconnects on remount)
     const socket = useMemo(() => io(serverAddress), []);
 
     useEffect(() => {
+        // whenever chats change, select the proper chat
         if (chats)
             setSelectedChat(chats.filter(chat => {
                 return chat.classes.includes("selected-preview")
@@ -32,7 +37,10 @@ function Chat({user,setUser}) {
 
     useEffect(() => {
 
+        // chat created by another user updates this user's chat list
         const addChat = (chat) => {
+            // sets the chat list to be the old chats with the new chat, assuming that chat doesn't exist
+            // (prevents the chat from being created twice on the user that created it)
             setChats(chats => {
                 if(chats.filter(CHAT=>CHAT.id===chat.id).length>0)
                     return chats
@@ -43,6 +51,7 @@ function Chat({user,setUser}) {
         socket.on("newChat", addChat)
 
         return (() => {
+            // removes the listener after render so the same listener doesn't add up between renders
             socket.off("newChat", addChat)
         })
     }, [socket, setChats])

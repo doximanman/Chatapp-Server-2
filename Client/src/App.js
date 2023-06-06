@@ -6,6 +6,7 @@ import React, { useState} from 'react';
 
 function App() {
 
+    // user will be set by /login and /chat
     const [user, setUser] = useState(null)
 
     return (

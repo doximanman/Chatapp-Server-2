@@ -47,6 +47,7 @@ function Profile({ user, setChats,JWT,chats,socket }) {
 
     const handleLogout = () => {
         socket.disconnect();
+        sessionStorage.clear()
         navigate("/Login")
     }
         
