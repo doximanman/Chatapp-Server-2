@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom"
 import { GetUser, ValidateUser } from "../ServerQuery/UserQuery";
 
 function Login({ setUser }) {
-    setUser(null)
     const [input, setInput] = useState({
         Username: '',
         Password: ''
@@ -33,17 +32,15 @@ function Login({ setUser }) {
 
     }
 
-    let JWT = null;
-
     const navigate = useNavigate();
     async function handleLogin(e) {
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
-        JWT = await ValidateUser(username, password)
-        if (JWT) {
-            const user = await GetUser(username, JWT);
-            user["password"] = password
+        await sessionStorage.setItem('JWT',await ValidateUser(username, password))
+        if (sessionStorage.getItem('JWT')) {
+            sessionStorage.setItem('username',username)
+            const user = await GetUser(username, sessionStorage.getItem('JWT'));
             setUser(user)
             navigate("/Chat");
         }
