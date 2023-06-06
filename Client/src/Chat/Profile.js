@@ -3,7 +3,7 @@ import { useRef } from "react";
 import {useNavigate} from "react-router-dom";
 import {AddChat} from "../ServerQuery/ChatQuery";
 
-function Profile({ user, setChats,JWT,chats }) {
+function Profile({ user, setChats,JWT,chats,socket }) {
 
     const contactInput = useRef(null);
 
@@ -45,6 +45,7 @@ function Profile({ user, setChats,JWT,chats }) {
     const navigate=useNavigate();
 
     const handleLogout = () => {
+        socket.disconnect();
         navigate("/Login")
     }
         

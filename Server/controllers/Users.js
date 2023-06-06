@@ -1,7 +1,7 @@
 const UsersService = require('../services/Users');
 // Use a library to perform the cryptographic operations
 const jwt = require("jsonwebtoken")
-const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
+const key = process.env.KEY;
 
 // Ensure that the user sent a valid token
 const isLoggedIn = (req, res, next) => {

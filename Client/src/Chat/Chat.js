@@ -1,12 +1,14 @@
 import "./Chat.css"
 import Profile from "./Profile";
 import ChatTitle from "./ChatTitle";
-import { useState, useEffect } from "react";
+import {useState, useEffect, useRef, useMemo} from "react";
 import ChatList from "./ChatList";
 import { useNavigate } from "react-router-dom";
 import { ValidateUser } from "../ServerQuery/UserQuery";
 import { GetChats } from "../ServerQuery/ChatQuery";
 import ChatBody from "./ChatBody";
+import {io} from "socket.io-client";
+import {serverAddress} from "../ServerQuery/ServerInfo";
 
 function Chat({ user }) {
 
@@ -18,7 +20,9 @@ function Chat({ user }) {
 
     const [selectedChat, setSelectedChat] = useState(null)
 
+    const connected=useRef(false);
 
+    const socket=useMemo(()=>io(serverAddress),[]);
 
     useEffect(() => {
         if (chats)
@@ -49,8 +53,21 @@ function Chat({ user }) {
             })
             setChats(chats)
         }
-        if (!chats)
+        if (!chats) {
             initializeChats();
+            return;
+        }
+        if(!connected.current){
+            connected.current=true;
+            socket.emit('name',user.username);
+            socket.on('newMessage',(chatID,msg)=>{
+                chats.forEach(chat=>{
+                    if(chat.id===chatID)
+                        chat.lastMessage=msg
+                })
+                setChats([...chats])
+            })
+        }
     })
 
     if (!user || !JWT || !chats) {
@@ -60,11 +77,11 @@ function Chat({ user }) {
     return (
         <>
             <div id="main">
-                <Profile user={user} chats={chats} setChats={setChats} JWT={JWT} />
+                <Profile user={user} chats={chats} setChats={setChats} JWT={JWT} socket={socket}/>
                 <ChatList chats={chats} setChats={setChats} />
                 <div id="chat">
                     <ChatTitle chat={selectedChat} />
-                    <ChatBody user={user} chat={selectedChat} JWT={JWT} setChats={setChats} />
+                    <ChatBody user={user} chat={selectedChat} JWT={JWT} setChats={setChats} socket={socket} />
                 </div>
             </div>
         </>

@@ -23,9 +23,7 @@ function ChatPreview({chat, changeSelection}) {
             <img className="profile-pic" src={chat.user.profilePic} alt="Profile"/>
             <div className="profile-name">{chat.user.displayName}</div>
             <div className="preview-date">{lastMessage.date}</div>
-            <div>
-                <p className="last-message">{lastMessage.message}</p>
-            </div>
+            <p className="last-message">{lastMessage.message}</p>
         </div>
     );
 

@@ -60,7 +60,7 @@ const getChatById = async (username, id) => {
         messages.push({ id: message._id, created: message.created, sender: await getUserDetailes(message.sender), content: message.content });
     }
     // return the detailes of the desired chat
-    return { id: id, users: [await getUserDetailes(chatById.users[0]), await getUserDetailes(chatById.users[1])], messages: messages };
+    return { id: id, users: [await getUserDetailes(chatById.users[0]), await getUserDetailes(chatById.users[1])], messages: messages.reverse() };
 };
 
 // delete chat by it's id, return 0 if it doesn't exist, 1 if the guven username doesn't appear on it or 2 otherwise
@@ -125,7 +125,7 @@ const getMessagesByChatId = async (username, chatId) => {
         messages.push({ id: messageId, created: message.created, sender: { username: message.sender }, content: message.content });
     }
     // return the messages array
-    return messages;
+    return messages.reverse();
 };
 
 module.exports = { createChat, getChats, getChatById, deleteChatById, addMessageToChat, getMessagesByChatId };

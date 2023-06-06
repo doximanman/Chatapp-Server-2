@@ -1,6 +1,6 @@
 const Users = require('../services/Users');
 const jwt = require("jsonwebtoken")
-const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
+const key = process.env.KEY;
 
 // create token to the user if he enters his correct username and password
 const createToken = async (req, res) => {
