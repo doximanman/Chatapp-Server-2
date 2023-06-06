@@ -48,9 +48,9 @@
   To run the server:
   2. open a terminal in the Server folder
   3. run
-    ```
+    '''
     npm i
     npm start
-    ```
+    '''
   4. run
   
