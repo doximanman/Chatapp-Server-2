@@ -57,6 +57,7 @@ function ChatBody({user, chat, JWT, setChats,socket}) {
         updateMessages()
     }, [JWT, chat, setChats, messages])
 
+
     return (
         <>
             <MessageList user={user} messages={messages} JWT={JWT}/>
