@@ -32,6 +32,12 @@ app.use('/api/Tokens', tokens);
 const chats = require('./src/routers/Chats');
 app.use('/api/Chats', chats);
 
+// anything not defined goes to react
+const path=require('path')
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'public','index.html'))
+})
+
 const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server,{
