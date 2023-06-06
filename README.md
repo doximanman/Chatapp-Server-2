@@ -45,12 +45,20 @@
   In order to run the project you'll need to have NodeJS installed (preferably version 18 and above), then you can choose to run the server
   or the client:
   1. save the files in a folder (unzipped)
-  To run the server:
+  ### To run the server:
   2. open a terminal in the Server folder
   3. run
-    '''
-    npm i
-    npm start
-    '''
-  4. run
+  ```
+  npm i
+  npm start
+  ```
+  ### To run the client:
+  2. open a terminal in the Client folder
+  3. run
+  ```
+  npm i
+  npm start
+  ```
   
+  Once the server is running, you can browse to ```localhost:5000``` and the client will be a build of the client that runs solely on the server.
+  If the client is running seperately, you can browse to ```localhost:3000``` and the client will be served by the react server. It will communicate with the server on ```localhost:5000```.
