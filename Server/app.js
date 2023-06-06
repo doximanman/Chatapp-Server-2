@@ -39,7 +39,7 @@ const io = require('socket.io')(server,{
         origin:'*',
     }
 });
-const sockets = require("./routers/Sockets")
+const sockets = require("./src/routers/Sockets")
 io.on('connection', (socket) => sockets.newSocket(io,socket));
 
 
