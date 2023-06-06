@@ -41,14 +41,16 @@
   
   Pay attention that you cannot browse the chat page unless you are connected to the app by inserting your correct username and password to the login page.
   
-## How to launch the project?
-  In order to run the project you'll need to have NodeJS installed (preferably version 20 and above), then follow these steps:
+## How to launch the project
+  In order to run the project you'll need to have NodeJS installed (preferably version 18 and above), then you can choose to run the server
+  or the client:
   1. save the files in a folder (unzipped)
-  2. from the folder, run the command:
-
-     ```
-     npm i react react-dom react-router-dom
-     npm start
-     ```
-  3. Now your default browser will open on the url "localhost:3000", which will load the page.
+  To run the server:
+  2. open a terminal in the Server folder
+  3. run
+    ```
+    npm i
+    npm start
+    ```
+  4. run
   
