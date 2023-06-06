@@ -38,6 +38,7 @@ export async function AddChat(contactName,JWT){
         return null
     }
     if(!res.ok){
+        alert(await res.text())
         return null
     }
     return await res.json()
@@ -78,6 +79,7 @@ export async function GetMessages(id,JWT){
         return null
     }
     if(!res.ok){
+        alert(await res.text())
         return null;
     }
     return await res.json();

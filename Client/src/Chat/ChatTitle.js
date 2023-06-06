@@ -6,13 +6,17 @@ import {setSelected} from "./ChatList";
 
 function ChatTitle({chat}){
 
+    // chat not selected yet
     if(!chat){
         return (<div id="chat-title"></div>)
     }
 
     function goBack(){
+        // a click on the top of the chat screen when the screen is small and a chat is selected
+        // will deselect the chat and go back to the chat list.
         document.getElementById('chat').classList.remove('fullscreen');
         document.getElementById('chat-list').classList.remove('hidden');
+        // that variable from ChatList that determines if the chat list or the chat body will be shown
         setSelected(false);
     }
 

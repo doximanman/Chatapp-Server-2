@@ -37,15 +37,22 @@ function Login({ setUser }) {
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
+        // validate
         const JWT=await ValidateUser(username, password)
         if (JWT) {
+            // valid
+
+            // save JWT and username
             sessionStorage.setItem('JWT',JWT)
             sessionStorage.setItem('username',username)
+
+            // get user and move to chat
             const user = await GetUser(username, sessionStorage.getItem('JWT'));
             setUser(user)
             navigate("/Chat");
         }
         else {
+            // invalid
             setError(prev => ({
                 ...prev,
                 Username: "User doesn't exist, please register first."

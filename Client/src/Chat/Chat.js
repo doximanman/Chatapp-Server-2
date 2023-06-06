@@ -4,7 +4,7 @@ import ChatTitle from "./ChatTitle";
 import {useState, useEffect, useRef, useMemo} from "react";
 import ChatList from "./ChatList";
 import {useNavigate} from "react-router-dom";
-import {GetUser, ValidateUser} from "../ServerQuery/UserQuery";
+import {GetUser} from "../ServerQuery/UserQuery";
 import {GetChats} from "../ServerQuery/ChatQuery";
 import ChatBody from "./ChatBody";
 import {io} from "socket.io-client";
@@ -21,7 +21,7 @@ function Chat({user,setUser}) {
     // selected chat to show messages and to highlight on the left
     const [selectedChat, setSelectedChat] = useState(null)
 
-    // for the socket
+    // for the socket (connects only once per mount)
     const connected = useRef(false);
 
     // creates a socket that stays between renders (only reconnects on remount)
@@ -57,14 +57,22 @@ function Chat({user,setUser}) {
     }, [socket, setChats])
 
     useEffect(() => {
+        // connects the user to the socket.
+
+        // if the user isn't defined (still loading...) don't connect.
         if(!user)
             return
 
         if (!connected.current) {
+            // connects only once
             connected.current = true;
+            // notifies server of connection (handshake)
             socket.emit('user', user);
+            // updates chats on the left whenever a new message is received
             socket.on('newMessage', (chatID, msg) => {
                 setChats(chats => chats.map(chat => {
+                    // the new message belongs to the chat of id 'chatID'.
+                    // updates the last message of that chat ('setChats' causes a re-render)
                     if (chat.id === chatID) {
                         const newChat = {...chat}
                         newChat.lastMessage = msg
@@ -77,23 +85,26 @@ function Chat({user,setUser}) {
     }, [socket, setSelectedChat, connected, user])
 
     useEffect(() => {
+        // gets the chats from the server, and/or the user if there is a JWT
+
+        // no JWT - not logged in.
         if (!sessionStorage.getItem('JWT')) {
             sessionStorage.clear()
             navigate("/Login")
             return;
         }
 
+
+        // JWT and user isn't defined - gets the user from the server.
         const getUser=async(username,JWT)=>{
             setUser(await GetUser(username,JWT))
         }
-
-        // sets up initial state
-        // get JWT
         if(sessionStorage.getItem('JWT')&&!user){
             getUser(sessionStorage.getItem('username'),sessionStorage.getItem('JWT'))
-            return
         }
-        // chat list
+
+
+        // gets the chat list (JWT exists)
         const initializeChats = async () => {
             let chats = await GetChats(sessionStorage.getItem("JWT"))
             chats.forEach(chat => {
@@ -107,6 +118,7 @@ function Chat({user,setUser}) {
 
     })
 
+    // loading until the useEffects to their thing
     if (!user || !sessionStorage.getItem('JWT') || !chats) {
         return (<>Loading...</>);
     }

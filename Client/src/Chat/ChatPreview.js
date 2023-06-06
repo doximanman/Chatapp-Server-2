@@ -6,8 +6,10 @@ function convertFormat(dateTime) {
 
 function ChatPreview({chat, changeSelection}) {
 
+    // displays the chat's details (pfp, displayname,last message)
     const className = "chat-preview " + chat.classes;
 
+    // converts from 'message' object to { date: HH:MM , message: message_text }
     const lastMSG = chat.lastMessage
     const lastMessage = lastMSG ? {
         date: convertFormat(lastMSG.created),

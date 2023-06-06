@@ -9,6 +9,7 @@ import {AddUser, UserExists} from "../ServerQuery/UserQuery";
 
 
 function Register() {
+    // scary regex
     const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     const usernameRegExp = /^[a-zA-Z0-9-_!.]{4,20}$/;
 
@@ -30,6 +31,7 @@ function Register() {
 
 
     const onInputChange = e => {
+        // live validity update
         const { name, value } = e.target;
         setInput(prev => ({
             ...prev,
@@ -39,6 +41,7 @@ function Register() {
     }
 
     const onPictureChange = e => {
+        // reads the picture and saves as text
         setError(prev => ({
             ...prev,
             Picture: ""
@@ -58,6 +61,7 @@ function Register() {
     }
 
     const validateInput = e => {
+        // applies the scary regex
         let { name, value } = e.target;
         setError(prev => {
             const stateObj = { ...prev, [name]: "" };
@@ -100,6 +104,8 @@ function Register() {
         const displayName = input.DisplayName;
         const profilePic = input.Picture;
         let error = 0;
+
+        // validates input
         if (!username || !usernameRegExp.test(username)) {
             setError(prev => ({
                 ...prev,
@@ -145,6 +151,7 @@ function Register() {
             }));
         }
         else {
+            // input is valid. adds the new user and redirects to login
             const userData = { username, password, displayName, profilePic };
             await AddUser(userData)
             navigate("/Login");

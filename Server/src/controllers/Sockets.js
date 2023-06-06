@@ -44,12 +44,14 @@ const disconnect=(socket)=>{
 }
 
 const newMessage=(socket,usernames,chatID,msg)=>{
+    // find all relevant users
     let users=[];
     socketUsers.forEach((item)=>{
         if(usernames.includes(item.user.username))
             users.push(item)
     })
     if(users.length>0){
+        // tell the relevant users of the new message
         users.forEach(item=>{
             item.socket.emit("newMessage",chatID,msg)
             console.log("sending a new message to ",item.user.username)
@@ -58,14 +60,17 @@ const newMessage=(socket,usernames,chatID,msg)=>{
 }
 
 const newChat=(socket,usernames,chat)=>{
+    // find relevant users
     let users=[];
     socketUsers.forEach((item)=>{
         if(usernames.includes(item.user.username))
             users.push(item)
     })
     if(users.length>0){
+        // tell the new users of the new chat
         users.forEach(item=>{
             if(item.user.username===chat.user.username) {
+                // chat user has to change for the user that didn't make the chat ('tho shall not talk with thy self')
                 const otherUsername = usernames.filter(username => username !== item.user.username)[0]
                 chat.user=getUser(otherUsername)
             }
