@@ -61,4 +61,5 @@
   ```
   
   Once the server is running, you can browse to ```localhost:5000``` and the client will be a build of the client that runs solely on the server.
+  
   If the client is running seperately, you can browse to ```localhost:3000``` and the client will be served by the react server. It will communicate with the server on ```localhost:5000```.
