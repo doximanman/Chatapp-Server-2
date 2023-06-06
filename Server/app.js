@@ -23,13 +23,13 @@ mongoose.connect(process.env.CONNECTION_STRING,
     }
 );
 
-const users = require('./routers/Users');
+const users = require('./src/routers/Users');
 app.use('/api/Users', users);
 
-const tokens = require('./routers/Tokens');
+const tokens = require('./src/routers/Tokens');
 app.use('/api/Tokens', tokens);
 
-const chats = require('./routers/Chats');
+const chats = require('./src/routers/Chats');
 app.use('/api/Chats', chats);
 
 const http = require('http');
