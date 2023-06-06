@@ -1,44 +1,78 @@
 
-let socketNames= {};
+// list of {name,socket} jsons for each user that logs in.
+const {getUserByUsername} = require("./Users");
+let socketUsers= [];
 
-const connect=(socket)=>{
-
+// helper function to find user from username
+const getUser=username=>{
+    let user=null;
+    socketUsers.forEach(item=>{
+        if(item.user.username===username)
+            user=item.user
+    })
+    return user
 }
 
-const newUser=(socket, name)=>{
-    socketNames[name]=socket;
-    console.log(name+" connected")
+const connect=(socket)=>{
+    // the real connection starts at newUser
+}
+
+const newUser=(socket, user)=>{
+    // add name-socket json to the array
+    socketUsers.push({user,socket})
+    console.log(user.username+" connected")
 }
 
 const disconnect=(socket)=>{
-    let name=null;
-    for(const currentName in socketNames){
-        if(socketNames[currentName]===socket)
-            name=currentName;
+    // find the socket in the socketUsers list
+    let index=-1;
+    socketUsers.forEach((item,pos)=>{
+        if(item.socket===socket)
+            index=pos
+    })
+
+    // if found - remove from the socketUsers list.
+    if(index>=0) {
+        console.log(socketUsers[index].user.username+ " disconnected");
+        socketUsers.splice(index,1);
     }
-    if(name) {
-        console.log(name+ " disconnected");
-        delete socketNames[name];
-    }
+
+    // if not found - a socket disconnected without being connected (without going through the newUser function). weird!
     else{
         console.log("A socket tried to disconnect that isn't registered!");
     }
 }
 
 const newMessage=(socket,usernames,chatID,msg)=>{
-    let otherUsers=[];
-    for(const currentName in socketNames){
-        if(usernames.includes(currentName)){
-            otherUsers.push(currentName);
-        }
-    }
-    if(otherUsers.length>0){
-        otherUsers.forEach(name=>{
-            socketNames[name].emit("newMessage",chatID,msg)
-            console.log("sending a new message to ",name)
+    let users=[];
+    socketUsers.forEach((item)=>{
+        if(usernames.includes(item.user.username))
+            users.push(item)
+    })
+    if(users.length>0){
+        users.forEach(item=>{
+            item.socket.emit("newMessage",chatID,msg)
+            console.log("sending a new message to ",item.user.username)
         })
     }
 }
 
+const newChat=(socket,usernames,chat)=>{
+    let users=[];
+    socketUsers.forEach((item)=>{
+        if(usernames.includes(item.user.username))
+            users.push(item)
+    })
+    if(users.length>0){
+        users.forEach(item=>{
+            if(item.user.username===chat.user.username) {
+                const otherUsername = usernames.filter(username => username !== item.user.username)[0]
+                chat.user=getUser(otherUsername)
+            }
+            item.socket.emit("newChat",chat)
+            console.log("new chat created with ",item.user.username)
+        })
+    }
+}
 
-module.exports={newUser,disconnect,newMessage,connect};
+module.exports={newUser,disconnect,newMessage,connect,newChat};

@@ -11,27 +11,20 @@ function ChatBody({user, chat, JWT, setChats,socket}) {
 
 
     useEffect(()=>{
-        socket.on('newMessage',async ()=>{
-            if(chat)
-                setMessages(await GetMessages(chat.id, JWT))
-        })
-    },[socket])
 
-    useEffect(() => {
-        if (messages || !chat)
-            return
-
-        const getMessages = async () => {
-            if(chat) {
-                oldChatId.current = chat.id;
-                setMessages(await GetMessages(chat.id, JWT))
+        const updateMessages=(chatID,msg)=>{
+            if(chat&&chat.id===chatID) {
+                if(!messages||messages.length===0)
+                    setMessages([msg])
+                else if(messages[0].id!==msg.id)
+                    setMessages(messages=>[msg,...messages])
             }
         }
 
-        getMessages()
+        socket.on('newMessage',updateMessages)
 
-
-    })
+        return (()=>{socket.off('newMessage',updateMessages)})
+    },[socket,chat,messages])
 
     useEffect(() => {
         if (!chat)
@@ -41,27 +34,26 @@ function ChatBody({user, chat, JWT, setChats,socket}) {
             if (chat.id === oldChatId.current) {
                 // chat selected didn't change - means messages changed.
                 // updates the last message.
-                if (messages) {
-                    chat.lastMessage = messages[0]
-                    const usernames=[chat.user.username,user.username]
-                    socket.emit("newMessage",usernames,chat.id,chat.lastMessage)
+                if(messages.length>0) {
+                    if(!chat.lastMessage||chat.lastMessage.id!==messages[0].id) {
+                        chat.lastMessage = messages[0]
+                    }
                 }
             } else {
                 // chat selection changed - gets the messages of the new chat.
                 oldChatId.current = chat.id
                 setMessages(await GetMessages(chat.id, JWT))
-
             }
             setChats(chats => [...chats])
         }
         updateMessages()
-    }, [JWT, chat, setChats, messages])
+    }, [JWT, chat, setChats, messages,socket,user])
 
 
     return (
         <>
             <MessageList user={user} messages={messages} JWT={JWT}/>
-            <MessageSender chat={chat} JWT={JWT} setMessages={setMessages}/>
+            <MessageSender user={user} chat={chat} JWT={JWT} setMessages={setMessages} socket={socket}/>
         </>
     )
 }

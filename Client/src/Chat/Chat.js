@@ -3,14 +3,14 @@ import Profile from "./Profile";
 import ChatTitle from "./ChatTitle";
 import {useState, useEffect, useRef, useMemo} from "react";
 import ChatList from "./ChatList";
-import { useNavigate } from "react-router-dom";
-import { ValidateUser } from "../ServerQuery/UserQuery";
-import { GetChats } from "../ServerQuery/ChatQuery";
+import {useNavigate} from "react-router-dom";
+import {ValidateUser} from "../ServerQuery/UserQuery";
+import {GetChats} from "../ServerQuery/ChatQuery";
 import ChatBody from "./ChatBody";
 import {io} from "socket.io-client";
 import {serverAddress} from "../ServerQuery/ServerInfo";
 
-function Chat({ user }) {
+function Chat({user}) {
 
     const navigate = useNavigate();
 
@@ -20,9 +20,9 @@ function Chat({ user }) {
 
     const [selectedChat, setSelectedChat] = useState(null)
 
-    const connected=useRef(false);
+    const connected = useRef(false);
 
-    const socket=useMemo(()=>io(serverAddress),[]);
+    const socket = useMemo(() => io(serverAddress), []);
 
     useEffect(() => {
         if (chats)
@@ -30,6 +30,41 @@ function Chat({ user }) {
                 return chat.classes.includes("selected-preview")
             })[0])
     }, [chats])
+
+    useEffect(() => {
+
+        const addChat = (chat) => {
+            setChats(chats => {
+                if(chats.filter(CHAT=>CHAT.id===chat.id).length>0)
+                    return chats
+                return [...chats,chat]
+            })
+        }
+
+        socket.on("newChat", addChat)
+
+        return (() => {
+            socket.off("newChat", addChat)
+        })
+    }, [socket, setChats])
+
+    useEffect(() => {
+
+        if (!connected.current) {
+            connected.current = true;
+            socket.emit('user', user);
+            socket.on('newMessage', (chatID, msg) => {
+                setChats(chats => chats.map(chat => {
+                    if (chat.id === chatID) {
+                        const newChat = {...chat}
+                        newChat.lastMessage = msg
+                        return newChat
+                    }
+                    return chat
+                }))
+            })
+        }
+    }, [socket, setSelectedChat, connected, user])
 
     useEffect(() => {
         if (!user) {
@@ -55,19 +90,8 @@ function Chat({ user }) {
         }
         if (!chats) {
             initializeChats();
-            return;
         }
-        if(!connected.current){
-            connected.current=true;
-            socket.emit('name',user.username);
-            socket.on('newMessage',(chatID,msg)=>{
-                chats.forEach(chat=>{
-                    if(chat.id===chatID)
-                        chat.lastMessage=msg
-                })
-                setChats([...chats])
-            })
-        }
+
     })
 
     if (!user || !JWT || !chats) {
@@ -78,10 +102,10 @@ function Chat({ user }) {
         <>
             <div id="main">
                 <Profile user={user} chats={chats} setChats={setChats} JWT={JWT} socket={socket}/>
-                <ChatList chats={chats} setChats={setChats} />
+                <ChatList chats={chats} setChats={setChats}/>
                 <div id="chat">
-                    <ChatTitle chat={selectedChat} />
-                    <ChatBody user={user} chat={selectedChat} JWT={JWT} setChats={setChats} socket={socket} />
+                    <ChatTitle chat={selectedChat}/>
+                    <ChatBody user={user} chat={selectedChat} JWT={JWT} setChats={setChats} socket={socket}/>
                 </div>
             </div>
         </>

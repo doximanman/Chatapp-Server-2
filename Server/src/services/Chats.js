@@ -33,10 +33,10 @@ const getChats = async (username) => {
         let lastMessage = chat.messages.length !== 0 ? await MessageService.getMessageById(chat.messages[chat.messages.length - 1]) : [];
         // insert the second user to the chat detailes item
         if (chat.users[0] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: lastMessage !== [] ? { id: lastMessage._id, created: lastMessage.created, content: lastMessage.content } : [] });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[1]), lastMessage: lastMessage.id  ? { id: lastMessage._id, created: lastMessage.created, content: lastMessage.content } : null });
         }
         else if (chat.users[1] === username) {
-            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: lastMessage !== [] ? { id: lastMessage._id, created: lastMessage.created, content: lastMessage.content } : [] });
+            chats.push({ id: chat._id, user: await getUserDetailes(chat.users[0]), lastMessage: lastMessage.id  ? { id: lastMessage._id, created: lastMessage.created, content: lastMessage.content } : null });
         }
     };
     return chats;

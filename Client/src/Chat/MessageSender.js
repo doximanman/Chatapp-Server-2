@@ -2,7 +2,7 @@ import sendIcon from "../Pictures/send-icon.png";
 import {useRef} from "react";
 import {SendMessage} from "../ServerQuery/ChatQuery";
 
-function MessageSender({chat,JWT,setMessages}){
+function MessageSender({user,chat,JWT,setMessages,socket}){
 
     const userInput = useRef(null);
 
@@ -18,6 +18,8 @@ function MessageSender({chat,JWT,setMessages}){
                 return
             }
             setMessages(messages=>[message,...messages]);
+            const users = [user.username, chat.user.username]
+            socket.emit("newMessage", users, chat.id, message)
         }
         document.getElementById('message-input').value = '';
     }

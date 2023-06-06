@@ -37,6 +37,7 @@ function Profile({ user, setChats,JWT,chats,socket }) {
                 return
             }
             chat.classes=""
+            socket.emit("newChat",[user.username,contactInput.current.value],chat)
             setChats(chats => [...chats, chat]);
             contactInput.current.value = '';
             updateDismiss();
