@@ -5,9 +5,9 @@ import Title from '../FormsItems/Title';
 import BottomMessage from '../FormsItems/BottomMessage';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
-import { GetUser, ValidateUser} from "../ServerQuery/UserQuery";
+import { GetUser, ValidateUser } from "../ServerQuery/UserQuery";
 
-function Login({setUser}) {
+function Login({ setUser }) {
     setUser(null)
     const [input, setInput] = useState({
         Username: '',
@@ -33,17 +33,17 @@ function Login({setUser}) {
 
     }
 
-    let JWT=null;
+    let JWT = null;
 
     const navigate = useNavigate();
-    async function handleLogin(e){
+    async function handleLogin(e) {
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
-        JWT=await ValidateUser(username,password)
+        JWT = await ValidateUser(username, password)
         if (JWT) {
-            const user=await GetUser(username,JWT);
-            user["password"]=password
+            const user = await GetUser(username, JWT);
+            user["password"] = password
             setUser(user)
             navigate("/Chat");
         }
