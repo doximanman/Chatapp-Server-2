@@ -2,10 +2,11 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Chat from "./Chat/Chat"
 import Login from "./Login/Login";
 import Register from "./Register/Register"
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 
 function App() {
 
+    // user will be set by /login and /chat
     const [user, setUser] = useState(null)
 
     return (

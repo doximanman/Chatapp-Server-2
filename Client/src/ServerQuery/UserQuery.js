@@ -3,7 +3,7 @@ export async function ValidateUser(username,password){
     const data={username,password}
     let res;
     try {
-        res = await fetch(serverAddress + "/Tokens", {
+        res = await fetch(serverAddress + "/api/Tokens", {
             'method': 'post',
             'headers': {
                 'Content-Type': "application/json",
@@ -27,7 +27,7 @@ export async function UserExists(username, password){
 export async function GetUser(username,JWT){
     let res;
     try {
-        res = await fetch(serverAddress + "/Users/" + username, {
+        res = await fetch(serverAddress + "/api/Users/" + username, {
             'method': 'get',
             'headers': {
                 'authorization': 'bearer ' + JWT,
@@ -47,7 +47,7 @@ export async function GetUser(username,JWT){
 export async function AddUser(user){
     let res;
     try {
-        res = await fetch(serverAddress + "/Users", {
+        res = await fetch(serverAddress + "/api/Users", {
             'method': 'post',
             'headers': {
                 'Content-Type': 'application/json'

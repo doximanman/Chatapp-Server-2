@@ -3,7 +3,7 @@ import {serverAddress} from "./ServerInfo";
 export async function GetChats(JWT){
     let res;
     try {
-        res = await fetch(serverAddress + "/Chats", {
+        res = await fetch(serverAddress + "/api/Chats", {
             'method': 'get',
             'headers': {
                 'Accept': 'application/json',
@@ -24,7 +24,7 @@ export async function AddChat(contactName,JWT){
     const data={username: contactName}
     let res;
     try {
-        res = await fetch(serverAddress + "/Chats", {
+        res = await fetch(serverAddress + "/api/Chats", {
             'method': 'post',
             'headers': {
                 'Content-Type': 'application/json',
@@ -38,6 +38,7 @@ export async function AddChat(contactName,JWT){
         return null
     }
     if(!res.ok){
+        alert(await res.text())
         return null
     }
     return await res.json()
@@ -46,7 +47,7 @@ export async function AddChat(contactName,JWT){
 export async function GetChat(id,JWT){
     let res
     try {
-        res = await fetch(serverAddress + "/Chats/" + id, {
+        res = await fetch(serverAddress + "/api/Chats/" + id, {
             'method': 'get',
             'headers': {
                 'authorization': 'bearer ' + JWT,
@@ -66,7 +67,7 @@ export async function GetChat(id,JWT){
 export async function GetMessages(id,JWT){
     let res
     try{
-        res = await fetch(serverAddress + "/Chats/" + id+"/Messages", {
+        res = await fetch(serverAddress + "/api/Chats/" + id+"/Messages", {
             'method': 'get',
             'headers': {
                 'authorization': 'bearer ' + JWT,
@@ -78,6 +79,7 @@ export async function GetMessages(id,JWT){
         return null
     }
     if(!res.ok){
+        alert(await res.text())
         return null;
     }
     return await res.json();
@@ -87,7 +89,7 @@ export async function SendMessage(msg,id,JWT){
     const data={msg}
     let res
     try{
-        res = await fetch(serverAddress + "/Chats/" + id+"/Messages", {
+        res = await fetch(serverAddress + "/api/Chats/" + id+"/Messages", {
             'method': 'post',
             'headers': {
                 'authorization': 'bearer ' + JWT,

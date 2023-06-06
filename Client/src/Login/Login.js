@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom"
 import { GetUser, ValidateUser } from "../ServerQuery/UserQuery";
 
 function Login({ setUser }) {
-    setUser(null)
     const [input, setInput] = useState({
         Username: '',
         Password: ''
@@ -33,21 +32,27 @@ function Login({ setUser }) {
 
     }
 
-    let JWT = null;
-
     const navigate = useNavigate();
     async function handleLogin(e) {
         e.preventDefault();
         const username = input.Username;
         const password = input.Password;
-        JWT = await ValidateUser(username, password)
+        // validate
+        const JWT=await ValidateUser(username, password)
         if (JWT) {
-            const user = await GetUser(username, JWT);
-            user["password"] = password
+            // valid
+
+            // save JWT and username
+            sessionStorage.setItem('JWT',JWT)
+            sessionStorage.setItem('username',username)
+
+            // get user and move to chat
+            const user = await GetUser(username, sessionStorage.getItem('JWT'));
             setUser(user)
             navigate("/Chat");
         }
         else {
+            // invalid
             setError(prev => ({
                 ...prev,
                 Username: "User doesn't exist, please register first."

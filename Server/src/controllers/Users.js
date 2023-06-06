@@ -1,7 +1,7 @@
 const UsersService = require('../services/Users');
 // Use a library to perform the cryptographic operations
 const jwt = require("jsonwebtoken")
-const key = "Some super secret key shhhhhhhhhhhhhhhhh!!!!!"
+const key = process.env.KEY;
 
 // Ensure that the user sent a valid token
 const isLoggedIn = (req, res, next) => {
@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
     const user = await UsersService.createUser(req.body.username, req.body.password, req.body.displayName, req.body.profilePic);
     // print registration errors if exist
     if (typeof user === "string") {
-        return res.status(404).json({ errors: [user] });
+        return res.status(404).send(user);
     }
     res.json(user);
 };
@@ -38,11 +38,11 @@ const createUser = async (req, res) => {
 // GET user detailes by its username if the username added his correct token to the request
 const getUserByUsername = async (req, res) => {
     if (res.locals.username !== req.params.username) {
-        return res.status(401).json({ errors: ["Unauthorized"] });
+        return res.status(401).send("Unauthorized");
     }
     const user = await UsersService.getUserByUsername(req.params.username);
     if (!user) {
-        return res.status(404).json({ errors: ["User doesn't exist"] });
+        return res.status(404).send("User doesn't exist");
     }
     res.json({ username: user.username, displayName: user.displayName, profilePic: user.profilePic })
 };

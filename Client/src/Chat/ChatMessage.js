@@ -8,11 +8,15 @@ function getTime(dateTime){
 
 function ChatMessage({user,message}){
 
+    // converts a message to JSX
+
+    // type - who sent the message (cyan or blue, on the left or on the right, etc... )
     let type="received"
     if(user.username===message.sender.username){
         type="sent"
     }
 
+    // style of the messages
     const classes="message message-"+type+" bubble item";
 
     return(

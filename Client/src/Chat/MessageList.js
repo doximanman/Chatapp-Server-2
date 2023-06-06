@@ -1,6 +1,8 @@
 import ChatMessage from "./ChatMessage";
 function MessageList({user, messages}) {
 
+    // convert from messages object array to JSX
+
     if(!messages){
         return (<div id="message-list"></div>)
     }
