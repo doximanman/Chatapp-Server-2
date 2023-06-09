@@ -2,7 +2,7 @@
 ## The Aim of the App
   This app aims to allow people to chat with each other from anywhere in the world easily and intuitively, from one app.
 
-## Current functionality
+## Client functionality (front-end)
 * ### Register page:
   You can register to the website. Registration requires a username, password, a display name and a profile picture.
   
@@ -41,6 +41,10 @@
   
   Notice that you cannot browse to the chat page unless you are logged in. After logging in once, you stay logged in until
   you explicitly log out.
+  
+## Server functionality (back-end)
+  ...
+  ...
   
 ## How to launch the project
   In order to run the project you'll need to have NodeJS installed (preferably version 18 and above), then you can choose to run the server
