@@ -8,15 +8,16 @@
   
   Once you provide valid credentials (specified by the requirements that show when you start typing), you can hit the "register" button and
   you will be fully registered and sent to the login page to log in.
-  (note: registrations only last per session- meaning on a refresh of the page or a restart of the server the registered accounts will reset.)
+  
+  Your credentials are saved in a database by the server. Once you've registered, it is saved forever!
   
   If you've already registered, you can click on the bottom of the page to go to the login page.
     
 * ### Login page:
   On this page you can login to the website using the credentials you've provided in the registration form.
   
-  Once you typed in your username and password, they will be checked and validated according to past registrations.
-  If the username-password combo match an existing registered user you will be logged in and set to the chat page.
+  Once you type in your username and password, they will be checked and validated according to past registrations.
+  If the username-password combo match an existing registered user you will be logged in and sent to the chat page.
   
   If you haven't logged in yet, you can click on the bottom of the page to go the register page.
     
@@ -25,21 +26,21 @@
   along with a button to add new chats to your chat list, which you can see right underneath. You can also logout
   using the red button that says "logout".
   
-  The chat list contains the list of all the chats that you have added in the past. Every chat is identified in the list
-  with a profile picture, a display name, and the last message sent or recieved, with its date.
+  The chat list contains the list of all the chats that you have added in the past. Every chat in the list
+  has a profile picture, a display name, and the last message sent or recieved, with its date.
   
   From the chat list you can select a chat to display on the right side. If a chat is selected, it will be highlighted
   in blue.
   
   On the right side you can see the selected chat. At the top you have the other person's profile picture and display
-  name. Below that you have the chat itself containing all the messages, and below that you have the message box along
+  name. Below that you have the chat itself containing all the messages, and below that you have a message box along
   with a send button.
   
-  You can change the selected chat, add a new contact, send messages, and logout.
-  Currently you cannot receive messages because all the data is stored in memory and is local.
-  Messages are reset on login.
+  You can change the selected chat, add a new contact, send and recieve messages, and logout.
+  Chats created with you are added on your end automatically.
   
-  Pay attention that you cannot browse the chat page unless you are connected to the app by inserting your correct username and password to the login page.
+  Notice that you cannot browse to the chat page unless you are logged in. After logging in once, you stay logged in until
+  you explicitly log out.
   
 ## How to launch the project
   In order to run the project you'll need to have NodeJS installed (preferably version 18 and above), then you can choose to run the server
