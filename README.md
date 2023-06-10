@@ -43,8 +43,11 @@
   you explicitly log out.
   
 ## Server functionality (back-end)
-  ...
-  ...
+  The server of the app is designed using the MVC (Model-View-Controller) pattern. This architectural pattern helps organize the codebase into distinct components, making it easier to maintain and extend the application in the future.
+  * MVC Architecture: The server follows the MVC pattern, which separates the concerns of data management, presentation, and user interaction. This promotes code reusability and maintainability.
+  * HTTP Requests: User actions within the app are translated into HTTP requests, which are sent directly to the server. The server then handles these requests, performing the necessary operations and providing appropriate responses.
+  * MongoDB Database: We have chosen to use the MongoDB NoSQL database management system to store and manage the app's data. MongoDB's flexibility and scalability make it a suitable choice for handling varying data structures and accommodating future growth.
+  * Database Integration: Each incoming request to the server involves communication with the MongoDB database. This allows for seamless data import and export, ensuring that the desired information is efficiently processed and delivered.
   
 ## How to launch the project
   In order to run the project you'll need to have NodeJS installed (preferably version 18 and above), then you can choose to run the server
